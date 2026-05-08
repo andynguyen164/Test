@@ -1,0 +1,3530 @@
+{
+  "generatedAt": "2026-05-08T04:42:00.095Z",
+  "totals": {
+    "all": 152,
+    "byModule": {
+      "Trading": 62,
+      "Strategy Builder": 38,
+      "Bots": 14,
+      "Algo Hub": 16,
+      "Alert": 22
+    }
+  },
+  "modules": [
+    "Trading",
+    "Strategy Builder",
+    "Bots",
+    "Algo Hub",
+    "Alert"
+  ],
+  "cases": [
+    {
+      "id": "TC-T001",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "Futures Grid Trading",
+      "title": "Create Grid bot with valid default values",
+      "description": "Verify a Futures Grid bot is created successfully when all required fields are filled with valid values matching AC defaults.",
+      "preconditions": "User is logged in. Brokerage connected. Sufficient margin available.",
+      "testData": {
+        "symbol": "BTCUSDT",
+        "lowerprice": "50000",
+        "upperprice": "80000",
+        "numberofgrids": "10",
+        "quantitypergrid": "0.001",
+        "gridmode": "Neutral",
+        "liquidatewhenoutofrange": "OFF"
+      },
+      "rawTestData": "symbol: BTCUSDT | lowerPrice: 50000 | upperPrice: 80000 | numberOfGrids: 10 | quantityPerGrid: 0.001 | gridMode: Neutral | liquidateWhenOutOfRange: OFF",
+      "steps": [
+        "Navigate to Bot Trading → Futures Grid",
+        "Enter all fields with the above values",
+        "Click Create Bot"
+      ],
+      "expected": "Bot created successfully. Grid orders placed at equal price intervals between 50,000 and 80,000. Bot visible in active bots with status Running.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 3
+    },
+    {
+      "id": "TC-T002",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "Futures Grid Trading",
+      "title": "lowerPrice equal to upperPrice — validation error",
+      "description": "Verify the system rejects the configuration when lowerPrice equals upperPrice, as this produces a zero-width grid with no valid levels.",
+      "preconditions": "User is on Grid bot creation screen.",
+      "testData": {
+        "lowerprice": "70000",
+        "upperprice": "70000"
+      },
+      "rawTestData": "lowerPrice: 70000 | upperPrice: 70000",
+      "steps": [
+        "Enter lowerPrice = 70000 and upperPrice = 70000",
+        "Click Create Bot"
+      ],
+      "expected": "Validation error displayed: 'Lower price must be less than upper price.' Bot not created. Start Bot button is disabled.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 4
+    },
+    {
+      "id": "TC-T003",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "Futures Grid Trading",
+      "title": "lowerPrice greater than upperPrice — validation error",
+      "description": "Verify the system rejects inverted price range (lowerPrice > upperPrice), which is explicitly prohibited by the AC (lowerPrice < upperPrice).",
+      "preconditions": "User is on Grid bot creation screen.",
+      "testData": {
+        "lowerprice": "80000",
+        "upperprice": "50000"
+      },
+      "rawTestData": "lowerPrice: 80000 | upperPrice: 50000",
+      "steps": [
+        "Enter lowerPrice = 80000 and upperPrice = 50000",
+        "Click Create Bot"
+      ],
+      "expected": "Validation error: 'Lower price must be less than upper price.' Bot not created. Field highlighted. Start Bot button is disabled.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 5
+    },
+    {
+      "id": "TC-T004",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "Futures Grid Trading",
+      "title": "lowerPrice = 0 — validation error",
+      "description": "Verify lowerPrice = 0 is rejected. AC specifies lowerPrice must be > 0.",
+      "preconditions": "User is on Grid bot creation screen.",
+      "testData": {
+        "lowerprice": "0",
+        "upperprice": "80000"
+      },
+      "rawTestData": "lowerPrice: 0 | upperPrice: 80000",
+      "steps": [
+        "Enter lowerPrice = 0",
+        "Click Create Bot"
+      ],
+      "expected": "Validation error: 'Lower price must be greater than 0.' Bot not created.Start Bot button is disabled.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 6
+    },
+    {
+      "id": "TC-T005",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "Futures Grid Trading",
+      "title": "quantityPerGrid below minimum lot size — validation error",
+      "description": "Verify the system rejects quantityPerGrid below the brokerage's minimum lot size or minimum order size, as required by the AC (quantityPerGrid ≥ lotSize and ≥ minOrderSize).",
+      "preconditions": "User connected to Binance Futures. BTCUSDT min lot size: 0.001.",
+      "testData": {
+        "symbol": "BTCUSDT",
+        "quantitypergrid": "0.0001 (below lot size 0.001)"
+      },
+      "rawTestData": "symbol: BTCUSDT | quantityPerGrid: 0.0001 (below lot size 0.001)",
+      "steps": [
+        "Enter quantityPerGrid = 0.0001",
+        "Click Create Bot"
+      ],
+      "expected": "Validation error: 'Quantity per grid must be at least [lotSize].' Specific minimum displayed. Bot not created.Start Bot button is disabled.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 7
+    },
+    {
+      "id": "TC-T006",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "Futures Grid Trading",
+      "title": "quantityPerGrid = 0 — validation error",
+      "description": "Verify quantityPerGrid = 0 is rejected. AC specifies quantityPerGrid > 0.",
+      "preconditions": "User is on Grid bot creation screen.",
+      "testData": {
+        "quantitypergrid": "0"
+      },
+      "rawTestData": "quantityPerGrid: 0",
+      "steps": [
+        "Enter quantityPerGrid = 0",
+        "Click Create Bot"
+      ],
+      "expected": "Validation error: 'Quantity per grid must be greater than 0.' Bot not created.Start Bot button is disabled.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 8
+    },
+    {
+      "id": "TC-T007",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "Futures Grid Trading",
+      "title": "gridMode = Neutral — places buy and sell orders on both sides of current price",
+      "description": "Verify Neutral mode creates a symmetric grid: buy orders below current price AND sell orders above current price.",
+      "preconditions": "Grid bot created and running. BTCUSDT current price is within the configured range.",
+      "testData": {
+        "gridmode": "Neutral",
+        "lowerprice": "50000",
+        "upperprice": "80000",
+        "current price": "~71000"
+      },
+      "rawTestData": "gridMode: Neutral | lowerPrice: 50000 | upperPrice: 80000 | current price: ~71000",
+      "steps": [
+        "Create Grid bot with gridMode = Neutral",
+        "Start bot",
+        "Check open orders on the brokerage"
+      ],
+      "expected": "Open orders contain both limit buy orders at levels below current price AND limit sell orders at levels above current price. Number of orders on each side corresponds to grid levels.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 9
+    },
+    {
+      "id": "TC-T008",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "Futures Grid Trading",
+      "title": "gridMode = Long — places only buy orders below current price",
+      "description": "Verify Long mode creates a directional grid with only buy orders, consistent with a long-biased strategy. No short/sell orders should be placed.",
+      "preconditions": "Grid bot configured with gridMode = Long.",
+      "testData": {
+        "gridmode": "Long",
+        "lowerprice": "50000",
+        "upperprice": "80000"
+      },
+      "rawTestData": "gridMode: Long | lowerPrice: 50000 | upperPrice: 80000",
+      "steps": [
+        "Create Grid bot with gridMode = Long",
+        "Start bot",
+        "Check open orders"
+      ],
+      "expected": "Only limit buy orders exist in the open orders list. No sell orders placed at grid levels above current price. Grid is directional long.",
+      "priority": "High",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 10
+    },
+    {
+      "id": "TC-T009",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "Futures Grid Trading",
+      "title": "liquidateWhenOutOfRange = ON — position liquidated when price exits grid range",
+      "description": "Verify that when the toggle is ON, the bot automatically liquidates the position if price moves outside the defined upper or lower boundary.",
+      "preconditions": "Grid bot running with liquidateWhenOutOfRange = ON. Price is within range.",
+      "testData": {
+        "lowerprice": "50000",
+        "upperprice": "80000",
+        "liquidatewhenoutofrange": "ON",
+        "_3": "Simulate price dropping to 49000"
+      },
+      "rawTestData": "lowerPrice: 50000 | upperPrice: 80000 | liquidateWhenOutOfRange: ON | Simulate price dropping to 49000",
+      "steps": [
+        "Create bot with toggle ON",
+        "Start bot",
+        "Simulate or wait for price to drop below lowerPrice (49,000)",
+        "Check position and open orders"
+      ],
+      "expected": "Bot automatically liquidates open position when price breaches lowerPrice. All open grid orders cancelled. Position = 0. Event logged in bot activity.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 11
+    },
+    {
+      "id": "TC-T010",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "Futures Grid Trading",
+      "title": "liquidateWhenOutOfRange = OFF — position retained when price exits range",
+      "description": "Verify that when the toggle is OFF (default), the bot pauses grid activity but does NOT liquidate when price exits the range. User retains the position.",
+      "preconditions": "Grid bot running with liquidateWhenOutOfRange = OFF. Price exits range.",
+      "testData": {
+        "lowerprice": "50000",
+        "upperprice": "80000",
+        "liquidatewhenoutofrange": "OFF",
+        "_3": "Price drops to 49000"
+      },
+      "rawTestData": "lowerPrice: 50000 | upperPrice: 80000 | liquidateWhenOutOfRange: OFF | Price drops to 49000",
+      "steps": [
+        "Create bot with toggle OFF",
+        "Start bot",
+        "Simulate price dropping below lowerPrice",
+        "Check position"
+      ],
+      "expected": "Bot stops placing new grid orders outside the range. Open position (if any) is NOT automatically closed. User retains their BTC position. Bot status may show 'Paused' or 'Out of Range'.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 12
+    },
+    {
+      "id": "TC-T011",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "Futures Grid Trading",
+      "title": "maxNearestLevels validated — must be a positive integer less than 10",
+      "description": "Verify the AC rule: maxNearestLevels > 0, must be an integer. Per spec note: temporarily fixed at < 10. Entering 0 or ≥ 10 should fail validation.",
+      "preconditions": "User is on Grid bot creation screen.",
+      "testData": {
+        "test a": "maxNearestLevels = 0",
+        "test b": "maxNearestLevels = 10",
+        "test c": "maxNearestLevels = 1.5 (decimal)"
+      },
+      "rawTestData": "Test A: maxNearestLevels = 0 | Test B: maxNearestLevels = 10 | Test C: maxNearestLevels = 1.5 (decimal)",
+      "steps": [
+        "Enter maxNearestLevels = 0 → attempt save",
+        "Enter maxNearestLevels = 10 → attempt save",
+        "Enter maxNearestLevels = 1.5 → attempt save"
+      ],
+      "expected": "Test A: Error 'Must be > 0'. Test B: Error 'Must be less than 10'. Test C: Error 'Must be a whole number'. None of the three configurations create a bot.",
+      "priority": "Medium",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 13
+    },
+    {
+      "id": "TC-T012",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "Futures Grid Trading",
+      "title": "profitSpreadMultiplier = 0 — validation error",
+      "description": "Verify profitSpreadMultiplier = 0 is rejected. AC specifies it must be > 0.",
+      "preconditions": "User is on Grid bot creation screen.",
+      "testData": {
+        "profitspreadmultiplier": "0"
+      },
+      "rawTestData": "profitSpreadMultiplier: 0",
+      "steps": [
+        "Enter profitSpreadMultiplier = 0",
+        "Click Create Bot"
+      ],
+      "expected": "Validation error: 'Profit spread multiplier must be greater than 0.' Bot not created.Start Bot button is disabled.",
+      "priority": "Medium",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 14
+    },
+    {
+      "id": "TC-T013",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "Futures Grid Trading",
+      "title": "profitSpreadMultiplier = 0.5 — sell order placed at half grid step (tighter grid)",
+      "description": "Verify that with multiplier = 0.5, the sell order for each filled buy is placed at half the standard grid step above the buy price — reducing profit target per cycle.",
+      "preconditions": "Grid bot running. profitSpreadMultiplier = 0.5. Grid step = $3,000 (30,000 ÷ 10 grids).",
+      "testData": {
+        "lowerprice": "50000",
+        "upperprice": "80000",
+        "numberofgrids": "10",
+        "profitspreadmultiplier": "0.5",
+        "gridstep": "3000"
+      },
+      "rawTestData": "lowerPrice: 50000 | upperPrice: 80000 | numberOfGrids: 10 | profitSpreadMultiplier: 0.5 | gridStep: 3000",
+      "steps": [
+        "Create and start bot with multiplier = 0.5",
+        "Wait for or simulate a buy fill at a grid level (e.g., $65,000)",
+        "Check the corresponding sell order price"
+      ],
+      "expected": "Sell order placed at $65,000 + ($3,000 × 0.5) = $66,500. Not at the standard next grid level ($68,000). Confirms multiplier scales the sell target correctly.",
+      "priority": "Medium",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 15
+    },
+    {
+      "id": "TC-T014",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "DCA Trading",
+      "title": "Create DCA bot with valid configuration — all fields",
+      "description": "Verify a DCA bot is created successfully when all required and optional fields are set to valid values per AC.",
+      "preconditions": "User is logged in. Brokerage connected.",
+      "testData": {
+        "symbol": "BTCUSDT",
+        "direction": "Long",
+        "baseorderquantity": "0.01",
+        "dcaorderquantity": "0.005",
+        "maxdcaorders": "5",
+        "pricedeviation": "1%",
+        "takeprofit": "1.5%",
+        "stoploss": "10%",
+        "volumescale": "1",
+        "pricedeviationscale": "1"
+      },
+      "rawTestData": "symbol: BTCUSDT | direction: Long | baseOrderQuantity: 0.01 | dcaOrderQuantity: 0.005 | maxDcaOrders: 5 | priceDeviation: 1% | takeProfit: 1.5% | stopLoss: 10% | volumeScale: 1 | priceDeviationScale: 1",
+      "steps": [
+        "Navigate to Bot Trading → DCA",
+        "Fill all fields with above values",
+        "Click Create Bot"
+      ],
+      "expected": "Bot created. Base order placed immediately at market. System schedules up to 5 safety orders at 1% price deviation intervals below entry.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 17
+    },
+    {
+      "id": "TC-T015",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "DCA Trading",
+      "title": "baseOrderQuantity = 0 — validation error",
+      "description": "Verify baseOrderQuantity = 0 is rejected. AC requires > 0.",
+      "preconditions": "User is on DCA bot creation screen.",
+      "testData": {
+        "baseorderquantity": "0"
+      },
+      "rawTestData": "baseOrderQuantity: 0",
+      "steps": [
+        "Enter baseOrderQuantity = 0",
+        "Click Create Bot"
+      ],
+      "expected": "Validation error: 'Base order quantity must be greater than 0.' Bot not created.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 18
+    },
+    {
+      "id": "TC-T016",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "DCA Trading",
+      "title": "dcaOrderQuantity = 0 — validation error",
+      "description": "Verify dcaOrderQuantity = 0 is rejected. AC requires > 0.",
+      "preconditions": "User is on DCA bot creation screen.",
+      "testData": {
+        "dcaorderquantity": "0"
+      },
+      "rawTestData": "dcaOrderQuantity: 0",
+      "steps": [
+        "Enter dcaOrderQuantity = 0",
+        "Click Create Bot"
+      ],
+      "expected": "Validation error: 'DCA order quantity must be greater than 0.' Bot not created.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 19
+    },
+    {
+      "id": "TC-T017",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "DCA Trading",
+      "title": "priceDeviation = 0 — validation error",
+      "description": "Verify priceDeviation = 0 is rejected. AC requires > 0. A zero deviation would place all DCA orders at the same price as the entry, making them non-functional.",
+      "preconditions": "User is on DCA bot creation screen.",
+      "testData": {
+        "pricedeviation": "0%"
+      },
+      "rawTestData": "priceDeviation: 0%",
+      "steps": [
+        "Enter priceDeviation = 0",
+        "Click Create Bot"
+      ],
+      "expected": "Validation error: 'Price deviation must be greater than 0.' Bot not created.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 20
+    },
+    {
+      "id": "TC-T018",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "DCA Trading",
+      "title": "maxDcaOrders = 0 — valid, bot runs with base order only",
+      "description": "Verify that maxDcaOrders = 0 is accepted (AC specifies ≥ 0). The bot should place only the base order and never place any safety/DCA orders.",
+      "preconditions": "User is on DCA bot creation screen.",
+      "testData": {
+        "maxdcaorders": "0",
+        "baseorderquantity": "0.01",
+        "pricedeviation": "1%"
+      },
+      "rawTestData": "maxDcaOrders: 0 | baseOrderQuantity: 0.01 | priceDeviation: 1%",
+      "steps": [
+        "Enter maxDcaOrders = 0",
+        "Create bot",
+        "After base order fills, observe if any DCA orders are placed"
+      ],
+      "expected": "Bot created successfully. Base order placed. No DCA/safety orders are ever placed regardless of how much price falls. Bot waits for TP or SL on the base position only.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 21
+    },
+    {
+      "id": "TC-T019",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "DCA Trading",
+      "title": "takeProfit field left empty — system transmits 0, bot runs without take profit",
+      "description": "Verify that leaving takeProfit blank results in the system sending 0 to the backend (per AC: 'not required, if user does not enter, send 0'). The bot should run indefinitely without a TP trigger.",
+      "preconditions": "User is on DCA bot creation screen.",
+      "testData": {
+        "takeprofit": "(empty / not entered)"
+      },
+      "rawTestData": "takeProfit: (empty / not entered)",
+      "steps": [
+        "Leave takeProfit field blank",
+        "Create bot",
+        "Monitor bot — confirm no TP order is placed after entry",
+        "Inspect bot config in Details view"
+      ],
+      "expected": "Bot created without error. Details view shows takeProfit = 0 or 'None'. No take profit order is placed on the brokerage. Position stays open until manually closed or SL triggers.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 22
+    },
+    {
+      "id": "TC-T020",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "DCA Trading",
+      "title": "stopLoss = 0 — valid, bot runs without stop loss",
+      "description": "Verify stopLoss = 0 is accepted (AC: ≥ 0). The bot should have no automatic stop loss, meaning position stays open even if price falls significantly.",
+      "preconditions": "User is on DCA bot creation screen.",
+      "testData": {
+        "stoploss": "0"
+      },
+      "rawTestData": "stopLoss: 0",
+      "steps": [
+        "Enter stopLoss = 0",
+        "Create bot",
+        "Simulate large price drop past DCA levels",
+        "Check if any stop loss order fires"
+      ],
+      "expected": "Bot created without error. No stop loss order placed. Position remains open after large price drop. User is exposed to full downside — this is expected and per spec.",
+      "priority": "High",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 23
+    },
+    {
+      "id": "TC-T021",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "DCA Trading",
+      "title": "volumeScale = 0 — validation error",
+      "description": "Verify volumeScale = 0 is rejected. AC specifies > 0.",
+      "preconditions": "User is on DCA bot creation screen.",
+      "testData": {
+        "volumescale": "0"
+      },
+      "rawTestData": "volumeScale: 0",
+      "steps": [
+        "Enter volumeScale = 0",
+        "Click Create Bot"
+      ],
+      "expected": "Validation error: 'Volume scale must be greater than 0.' Bot not created.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 24
+    },
+    {
+      "id": "TC-T022",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "DCA Trading",
+      "title": "priceDeviationScale = 0 — validation error",
+      "description": "Verify priceDeviationScale = 0 is rejected. AC specifies > 0.",
+      "preconditions": "User is on DCA bot creation screen.",
+      "testData": {
+        "pricedeviationscale": "0"
+      },
+      "rawTestData": "priceDeviationScale: 0",
+      "steps": [
+        "Enter priceDeviationScale = 0",
+        "Click Create Bot"
+      ],
+      "expected": "Validation error: 'Price deviation scale must be greater than 0.' Bot not created.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 25
+    },
+    {
+      "id": "TC-T023",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "DCA Trading",
+      "title": "DCA bot stops placing orders after maxDcaOrders is reached",
+      "description": "Verify the bot places exactly maxDcaOrders safety orders and then stops — no additional orders are placed even if price continues to fall.",
+      "preconditions": "DCA bot running. maxDcaOrders = 3. Price falls through all 3 DCA levels.",
+      "testData": {
+        "maxdcaorders": "3",
+        "pricedeviation": "1%",
+        "entry": "$71,000",
+        "dca levels": "~$70,290 / ~$69,587 / ~$68,891"
+      },
+      "rawTestData": "maxDcaOrders: 3 | priceDeviation: 1% | Entry: $71,000 | DCA levels: ~$70,290 / ~$69,587 / ~$68,891",
+      "steps": [
+        "Start DCA bot",
+        "Wait or simulate price falling through all 3 DCA levels",
+        "Simulate price falling a further 2% below the 3rd DCA level",
+        "Check open orders"
+      ],
+      "expected": "Exactly 3 DCA orders placed (one at each deviation level). No 4th order placed when price falls further. Total position = base + 3× DCA orders. Bot waits for TP or SL.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 26
+    },
+    {
+      "id": "TC-T024",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "DCA Trading",
+      "title": "volumeScale > 1 — each subsequent DCA order quantity is scaled up correctly",
+      "description": "Verify that with volumeScale = 2, each DCA order quantity doubles the previous one, as the multiplier compounds across safety orders.",
+      "preconditions": "DCA bot running. volumeScale = 2. dcaOrderQuantity = 0.01.",
+      "testData": {
+        "dcaorderquantity": "0.01",
+        "volumescale": "2",
+        "maxdcaorders": "3"
+      },
+      "rawTestData": "dcaOrderQuantity: 0.01 | volumeScale: 2 | maxDcaOrders: 3",
+      "steps": [
+        "Create bot with volumeScale = 2",
+        "Start and let first DCA order fill",
+        "Let second DCA order fill",
+        "Let third DCA order fill",
+        "Check quantities of each DCA order in order history"
+      ],
+      "expected": "DCA order 1: 0.01 BTC. DCA order 2: 0.02 BTC (×2). DCA order 3: 0.04 BTC (×2). Quantities compound correctly with the scale factor.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 27
+    },
+    {
+      "id": "TC-T025",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "DCA Trading",
+      "title": "priceDeviationScale > 1 — DCA levels widen with each successive order",
+      "description": "Verify that with priceDeviationScale = 2, each successive DCA level is placed at a greater percentage deviation from the previous — spacing between levels grows.",
+      "preconditions": "DCA bot. priceDeviation = 1%. priceDeviationScale = 2. Entry at $71,000.",
+      "testData": {
+        "pricedeviation": "1%",
+        "pricedeviationscale": "2",
+        "entry": "$71,000"
+      },
+      "rawTestData": "priceDeviation: 1% | priceDeviationScale: 2 | Entry: $71,000",
+      "steps": [
+        "Create bot with priceDeviationScale = 2",
+        "Start bot",
+        "Check prices of DCA orders 1, 2, and 3 in open orders"
+      ],
+      "expected": "DCA level 1: 1% below entry = $70,290. DCA level 2: 2% below level 1 = ~$68,876. DCA level 3: 4% below level 2 = ~$66,121. Deviations compound — each level is progressively further apart.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 28
+    },
+    {
+      "id": "TC-T026",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "TWAP Futures Trading",
+      "title": "Create TWAP bot with valid configuration",
+      "description": "Verify a TWAP bot is created successfully with all required fields set to valid values per AC.",
+      "preconditions": "User is logged in. Brokerage connected with sufficient margin.",
+      "testData": {
+        "symbol": "BTCUSDT",
+        "side": "Buy",
+        "totalquantity": "0.1",
+        "durationminutes": "60",
+        "sliceintervalseconds": "30",
+        "maxdeviationpercentabove": "0.3%",
+        "maxdeviationpercentbelow": "0.3%",
+        "usepostonly": "true",
+        "marketexecuteunfilled": "false"
+      },
+      "rawTestData": "symbol: BTCUSDT | side: Buy | totalQuantity: 0.1 | durationMinutes: 60 | sliceIntervalSeconds: 30 | maxDeviationPercentAbove: 0.3% | maxDeviationPercentBelow: 0.3% | usePostOnly: true | marketExecuteUnfilled: false",
+      "steps": [
+        "Navigate to Bot Trading → TWAP",
+        "Enter all fields with above values",
+        "Click Create Bot"
+      ],
+      "expected": "Bot created. System calculates number of slices = (60 × 60) ÷ 30 = 120. Each slice quantity ≈ 0.1 ÷ 120 ≈ 0.000833 BTC. First limit order placed at market open.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 30
+    },
+    {
+      "id": "TC-T027",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "TWAP Futures Trading",
+      "title": "totalQuantity = 0 — validation error",
+      "description": "Verify totalQuantity = 0 is rejected. AC requires > 0.",
+      "preconditions": "User is on TWAP creation screen.",
+      "testData": {
+        "totalquantity": "0"
+      },
+      "rawTestData": "totalQuantity: 0",
+      "steps": [
+        "Enter totalQuantity = 0",
+        "Click Create Bot"
+      ],
+      "expected": "Validation error: 'Total quantity must be greater than 0.' Bot not created.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 31
+    },
+    {
+      "id": "TC-T028",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "TWAP Futures Trading",
+      "title": "durationMinutes = 0 — validation error",
+      "description": "Verify durationMinutes = 0 is rejected. AC requires > 0.",
+      "preconditions": "User is on TWAP creation screen.",
+      "testData": {
+        "durationminutes": "0"
+      },
+      "rawTestData": "durationMinutes: 0",
+      "steps": [
+        "Enter durationMinutes = 0",
+        "Click Create Bot"
+      ],
+      "expected": "Validation error: 'Duration must be greater than 0.' Bot not created.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 32
+    },
+    {
+      "id": "TC-T029",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "TWAP Futures Trading",
+      "title": "sliceIntervalSeconds = 0 — validation error",
+      "description": "Verify sliceIntervalSeconds = 0 is rejected. AC requires > 0.",
+      "preconditions": "User is on TWAP creation screen.",
+      "testData": {
+        "sliceintervalseconds": "0"
+      },
+      "rawTestData": "sliceIntervalSeconds: 0",
+      "steps": [
+        "Enter sliceIntervalSeconds = 0",
+        "Click Create Bot"
+      ],
+      "expected": "Validation error: 'Slice interval must be greater than 0.' Bot not created.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 33
+    },
+    {
+      "id": "TC-T030",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "TWAP Futures Trading",
+      "title": "sliceIntervalSeconds > total duration in seconds — only 1 slice placed",
+      "description": "Verify edge case where sliceIntervalSeconds exceeds the total duration (durationMinutes × 60). System should place exactly 1 slice for the full quantity.",
+      "preconditions": "User is on TWAP creation screen.",
+      "testData": {
+        "totalquantity": "0.1",
+        "durationminutes": "1 (60s total)",
+        "sliceintervalseconds": "90 (exceeds 60s duration)"
+      },
+      "rawTestData": "totalQuantity: 0.1 | durationMinutes: 1 (60s total) | sliceIntervalSeconds: 90 (exceeds 60s duration)",
+      "steps": [
+        "Enter durationMinutes = 1 and sliceIntervalSeconds = 90",
+        "Create bot",
+        "Monitor order placement"
+      ],
+      "expected": "Bot places exactly 1 order for the full totalQuantity (0.1 BTC). No subsequent slices. Execution completes after the first slice. Alternatively, a validation warning is shown that only 1 slice will execute.",
+      "priority": "Medium",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 34
+    },
+    {
+      "id": "TC-T031",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "TWAP Futures Trading",
+      "title": "usePostOnly = true — limit orders are post-only; immediate-fill orders are cancelled",
+      "description": "Verify that with usePostOnly = true, all slice orders are sent as Post-Only to the brokerage. If a slice order would immediately match (become taker), it is cancelled and not executed as a market order.",
+      "preconditions": "TWAP bot running. usePostOnly = true. marketExecuteUnfilled = false.",
+      "testData": {
+        "usepostonly": "true",
+        "marketexecuteunfilled": "false",
+        "_2": "Market is thin; slice order would cross the spread"
+      },
+      "rawTestData": "usePostOnly: true | marketExecuteUnfilled: false | Market is thin; slice order would cross the spread",
+      "steps": [
+        "Start TWAP bot",
+        "Simulate a slice interval where the order price would immediately fill (crosses spread)",
+        "Check order execution in Orders tab"
+      ],
+      "expected": "Slice order is cancelled (not filled) when it would have been a taker. A new post-only order is placed at the next interval. No market orders sent to brokerage. Brokerage confirms Post-Only flag on all orders.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 35
+    },
+    {
+      "id": "TC-T032",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "TWAP Futures Trading",
+      "title": "marketExecuteUnfilled = true — unfilled limit order converted to market at interval end",
+      "description": "Verify that with marketExecuteUnfilled = true, any slice order that is still open at the end of its interval is automatically converted to a market order to ensure execution.",
+      "preconditions": "TWAP bot running. marketExecuteUnfilled = true.",
+      "testData": {
+        "sliceintervalseconds": "30",
+        "marketexecuteunfilled": "true",
+        "_2": "Limit order not filled within 30 seconds"
+      },
+      "rawTestData": "sliceIntervalSeconds: 30 | marketExecuteUnfilled: true | Limit order not filled within 30 seconds",
+      "steps": [
+        "Start TWAP bot with marketExecuteUnfilled = true",
+        "Wait for a slice interval where the limit order does not fill within 30 seconds",
+        "Check order events at the 30-second mark"
+      ],
+      "expected": "At the 30-second mark, the unfilled limit order is converted to a market order and executed. Order Events tab shows: limit order → cancelled → market order placed and filled. Total quantity for the slice is executed.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 36
+    },
+    {
+      "id": "TC-T033",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "TWAP Futures Trading",
+      "title": "marketExecuteUnfilled = false — unfilled limit order is cancelled, not market-executed",
+      "description": "Verify that with marketExecuteUnfilled = false (default), an unfilled slice limit order is simply cancelled at interval end. The quantity for that slice is NOT executed as a market order.",
+      "preconditions": "TWAP bot running. marketExecuteUnfilled = false.",
+      "testData": {
+        "sliceintervalseconds": "30",
+        "marketexecuteunfilled": "false",
+        "_2": "Limit order not filled within 30 seconds"
+      },
+      "rawTestData": "sliceIntervalSeconds: 30 | marketExecuteUnfilled: false | Limit order not filled within 30 seconds",
+      "steps": [
+        "Start TWAP bot with marketExecuteUnfilled = false",
+        "Wait for an unfilled slice limit order at interval end",
+        "Check Order Events"
+      ],
+      "expected": "Unfilled limit order is cancelled at interval end. No market order is placed. That slice's quantity is skipped (or redistributed to future slices, per implementation). No unintended market execution.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 37
+    },
+    {
+      "id": "TC-T034",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "Portfolio Rebalancing",
+      "title": "Create Portfolio Rebalancing with valid config — RegularIntervals mode",
+      "description": "Verify a Portfolio Rebalancing bot is created successfully with at least 1 asset and RegularIntervals scheduling.",
+      "preconditions": "User is logged in. Account holds at least 1 asset.",
+      "testData": {
+        "portfoliotargets": "[{symbol: BTCUSDT, weight: 50%}, {symbol: ETHUSDT, weight: 50%}]",
+        "scheduling.mode": "RegularIntervals",
+        "scheduling.frequency": "EveryDay",
+        "scheduling.time": "08:00:00"
+      },
+      "rawTestData": "portfolioTargets: [{symbol: BTCUSDT, weight: 50%}, {symbol: ETHUSDT, weight: 50%}] | scheduling.mode: RegularIntervals | scheduling.frequency: EveryDay | scheduling.time: 08:00:00",
+      "steps": [
+        "Navigate to Bot Trading → Portfolio Rebalancing",
+        "Add BTCUSDT (50%) and ETHUSDT (50%)",
+        "Set mode to RegularIntervals, frequency EveryDay, time 08:00:00",
+        "Click Create Bot"
+      ],
+      "expected": "Bot created. System schedules daily rebalance at 08:00. At trigger time, bot calculates current allocation vs target and places buy/sell orders to reach 50/50 split.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 39
+    },
+    {
+      "id": "TC-T035",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "Portfolio Rebalancing",
+      "title": "No asset target added — validation error (at least 1 required)",
+      "description": "Verify the bot cannot be created without at least one portfolio target asset, per AC: 'At least 1' required.",
+      "preconditions": "User is on Portfolio Rebalancing creation screen. No assets added.",
+      "testData": {
+        "portfoliotargets": "[] (empty)"
+      },
+      "rawTestData": "portfolioTargets: [] (empty)",
+      "steps": [
+        "Leave portfolio targets empty",
+        "Click Create Bot"
+      ],
+      "expected": "Validation error: 'Please add at least one portfolio target asset.' Bot not created.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 40
+    },
+    {
+      "id": "TC-T036",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "Portfolio Rebalancing",
+      "title": "scheduling.mode = SpecificTimes without times[] — validation error",
+      "description": "Verify that selecting SpecificTimes mode without providing at least one time entry is rejected, per AC: 'Required when mode = SpecificTimes'.",
+      "preconditions": "User has selected SpecificTimes as scheduling mode. No times added.",
+      "testData": {
+        "scheduling.mode": "SpecificTimes",
+        "scheduling.times[]": "[] (empty)"
+      },
+      "rawTestData": "scheduling.mode: SpecificTimes | scheduling.times[]: [] (empty)",
+      "steps": [
+        "Select SpecificTimes mode",
+        "Do not add any times",
+        "Click Create Bot"
+      ],
+      "expected": "Validation error: 'Please add at least one scheduled time for Specific Times mode.' Bot not created.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 41
+    },
+    {
+      "id": "TC-T037",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "Portfolio Rebalancing",
+      "title": "scheduling.time in invalid format — validation error",
+      "description": "Verify that a time value not matching HH:mm:ss format is rejected by the system.",
+      "preconditions": "User is on Portfolio Rebalancing creation screen.",
+      "testData": {
+        "scheduling.time": "'8:00' (invalid — missing seconds)",
+        "also test": "'25:00:00' (invalid hour)"
+      },
+      "rawTestData": "scheduling.time: '8:00' (invalid — missing seconds) | also test: '25:00:00' (invalid hour)",
+      "steps": [
+        "Enter scheduling.time = '8:00' → attempt save",
+        "Enter scheduling.time = '25:00:00' → attempt save"
+      ],
+      "expected": "Both inputs rejected with validation error: 'Time must be in HH:mm:ss format.' For '25:00:00', additional error: 'Invalid time value.' Bot not created in either case.",
+      "priority": "Medium",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 42
+    },
+    {
+      "id": "TC-T038",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "Portfolio Rebalancing",
+      "title": "scheduling.mode = SpecificTimes with multiple times — rebalances at each scheduled time",
+      "description": "Verify that adding multiple times in SpecificTimes mode causes the bot to trigger a rebalance at each listed time, not just the first one.",
+      "preconditions": "Portfolio Rebalancing bot running. scheduling.mode = SpecificTimes. Multiple times configured.",
+      "testData": {
+        "scheduling.mode": "SpecificTimes",
+        "scheduling.times": "['08:00:00', '14:00:00', '20:00:00']"
+      },
+      "rawTestData": "scheduling.mode: SpecificTimes | scheduling.times: ['08:00:00', '14:00:00', '20:00:00']",
+      "steps": [
+        "Create bot with SpecificTimes and three scheduled times",
+        "Monitor bot activity log over a full day",
+        "Verify rebalance events at each scheduled time"
+      ],
+      "expected": "Rebalance executed at 08:00, 14:00, and 20:00. Three rebalance events logged in activity. No rebalance occurs outside these times. Each event calculates and trades to target allocation independently.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 43
+    },
+    {
+      "id": "TC-T039",
+      "module": "Trading",
+      "featureGroup": "BOT",
+      "subFeature": "Portfolio Rebalancing",
+      "title": "scheduling.frequency = EveryDay fires exactly once per day",
+      "description": "Verify RegularIntervals with EveryDay frequency triggers exactly one rebalance per day at the specified time — not more, not less.",
+      "preconditions": "Portfolio Rebalancing bot running. mode = RegularIntervals, frequency = EveryDay, time = 09:00:00.",
+      "testData": {
+        "scheduling.mode": "RegularIntervals",
+        "scheduling.frequency": "EveryDay",
+        "scheduling.time": "09:00:00"
+      },
+      "rawTestData": "scheduling.mode: RegularIntervals | scheduling.frequency: EveryDay | scheduling.time: 09:00:00",
+      "steps": [
+        "Start bot",
+        "Monitor activity log over 48 hours",
+        "Count rebalance events"
+      ],
+      "expected": "Exactly 2 rebalance events logged over 48 hours (one per day at 09:00). No extra triggers between scheduled times. No missed triggers.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 44
+    },
+    {
+      "id": "TC-T019",
+      "module": "Trading",
+      "featureGroup": "CHART",
+      "subFeature": "Change Interval",
+      "title": "Switch chart to 15m interval",
+      "description": "Verify chart reloads with 15-minute candles when 15m is selected.",
+      "preconditions": "User is on Trading page with a pair loaded.",
+      "testData": {
+        "current interval": "1H",
+        "target": "15m"
+      },
+      "rawTestData": "Current interval: 1H | Target: 15m",
+      "steps": [
+        "Click '15m' in the interval selector toolbar",
+        "Observe chart update"
+      ],
+      "expected": "Chart reloads with 15-minute candlesticks. MA values (MA5, MA10, MA30, MA60) update accordingly.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 47
+    },
+    {
+      "id": "TC-T020",
+      "module": "Trading",
+      "featureGroup": "CHART",
+      "subFeature": "Change Interval",
+      "title": "Switch chart to 1H interval",
+      "description": "Verify chart reloads with 1-hour candles.",
+      "preconditions": "User is on Trading page.",
+      "testData": {
+        "target": "1H"
+      },
+      "rawTestData": "Target: 1H",
+      "steps": [
+        "Click '1H' in the interval selector"
+      ],
+      "expected": "Chart reloads with 1-hour candles. Time axis and volume bars update.",
+      "priority": "High",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 48
+    },
+    {
+      "id": "TC-T021",
+      "module": "Trading",
+      "featureGroup": "CHART",
+      "subFeature": "Change Interval",
+      "title": "Switch chart to 4H, 1D, 1W intervals",
+      "description": "Verify chart correctly renders when switching to 4H, 1D, and 1W intervals.",
+      "preconditions": "User is on Trading page.",
+      "testData": {
+        "intervals to test": "4H, 1D, 1W"
+      },
+      "rawTestData": "Intervals to test: 4H, 1D, 1W",
+      "steps": [
+        "Click '4H' – observe chart",
+        "Click '1D' – observe chart",
+        "Click '1W' – observe chart"
+      ],
+      "expected": "Each interval loads correct candle data. Historical range increases with longer intervals. No rendering errors.",
+      "priority": "Medium",
+      "severity": "Minor",
+      "environment": "Web",
+      "rowIndex": 49
+    },
+    {
+      "id": "TC-T022",
+      "module": "Trading",
+      "featureGroup": "CHART",
+      "subFeature": "Change Interval",
+      "title": "Selected interval persists after switching trading pair",
+      "description": "Verify the selected interval is kept when user switches to a different trading pair.",
+      "preconditions": "User has selected 4H interval.",
+      "testData": {
+        "current pair": "BTC/USDT",
+        "interval": "4H",
+        "new pair": "ETH/USDT"
+      },
+      "rawTestData": "Current pair: BTC/USDT | Interval: 4H | New pair: ETH/USDT",
+      "steps": [
+        "Select 4H interval",
+        "Switch trading pair to ETH/USDT via pair selector"
+      ],
+      "expected": "ETH/USDT chart loads at 4H. Interval does not reset to default after pair change.",
+      "priority": "Medium",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 50
+    },
+    {
+      "id": "TC-T023",
+      "module": "Trading",
+      "featureGroup": "CHART",
+      "subFeature": "Change Symbol",
+      "title": "Search and select a trading pair",
+      "description": "Verify user can search for a pair and switch to it on the chart.",
+      "preconditions": "User is on Trading page. Multiple pairs available.",
+      "testData": {
+        "search": "'ETH'",
+        "select": "ETHUSDT"
+      },
+      "rawTestData": "Search: 'ETH' | Select: ETHUSDT",
+      "steps": [
+        "Click the pair selector (e.g. BTC/USDT dropdown at top left)",
+        "Type 'ETH' in search box",
+        "Click ETHUSDT in results"
+      ],
+      "expected": "Chart switches to ETH/USDT. Header shows correct price, 24h change, 24h high, 24h low, and volume.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 52
+    },
+    {
+      "id": "TC-T024",
+      "module": "Trading",
+      "featureGroup": "CHART",
+      "subFeature": "Change Symbol",
+      "title": "Filter trading pairs by brokerage",
+      "description": "Verify pair list correctly filters when user selects a specific brokerage.",
+      "preconditions": "User is on pair selection screen. Multiple brokerages connected (Binance, OKX, Bybit, etc.).",
+      "testData": {
+        "brokerage filter": "Binance"
+      },
+      "rawTestData": "Brokerage filter: Binance",
+      "steps": [
+        "Open pair list",
+        "Click 'Binance' brokerage filter icon",
+        "Observe filtered pair list"
+      ],
+      "expected": "Only Binance pairs are shown. Pairs from other brokerages (OKX, KuCoin, etc.) are hidden.",
+      "priority": "High",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 53
+    },
+    {
+      "id": "TC-T025",
+      "module": "Trading",
+      "featureGroup": "CHART",
+      "subFeature": "Change Symbol",
+      "title": "Search for non-existent trading pair",
+      "description": "Verify appropriate empty state when search returns no results.",
+      "preconditions": "User is on pair search screen.",
+      "testData": {
+        "search": "'XYZABC' (non-existent pair)"
+      },
+      "rawTestData": "Search: 'XYZABC' (non-existent pair)",
+      "steps": [
+        "Open pair list",
+        "Type 'XYZABC' in search box",
+        "Wait for results"
+      ],
+      "expected": "No results shown. Empty state message displayed such as 'No pairs found'.",
+      "priority": "Medium",
+      "severity": "Minor",
+      "environment": "Web",
+      "rowIndex": 54
+    },
+    {
+      "id": "TC-T026",
+      "module": "Trading",
+      "featureGroup": "CHART",
+      "subFeature": "Chart View & Indicators",
+      "title": "Switch between Original and Trading View modes",
+      "description": "Verify user can toggle between 'Original' and 'Trading View' chart modes.",
+      "preconditions": "User is on Trading page with chart loaded.",
+      "testData": {
+        "current mode": "Original"
+      },
+      "rawTestData": "Current mode: Original",
+      "steps": [
+        "Click 'Trading View' button in chart toolbar",
+        "Observe chart",
+        "Click 'Original' to switch back"
+      ],
+      "expected": "TradingView mode renders correctly with full feature set. Switching back restores original chart without data loss.",
+      "priority": "High",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 56
+    },
+    {
+      "id": "TC-T027",
+      "module": "Trading",
+      "featureGroup": "CHART",
+      "subFeature": "Chart View & Indicators",
+      "title": "MA indicators display and calculate correctly",
+      "description": "Verify MA5, MA10, MA30, MA60 lines are visible and show correct values on the chart.",
+      "preconditions": "User is on Trading page. BTC/USDT loaded at 15m.",
+      "testData": {
+        "pair": "BTC/USDT",
+        "interval": "15m"
+      },
+      "rawTestData": "Pair: BTC/USDT | Interval: 15m",
+      "steps": [
+        "Load chart for BTC/USDT at 15m",
+        "Check MA lines visually on chart",
+        "Verify MA values shown in header bar match last candle"
+      ],
+      "expected": "MA5, MA10, MA30, MA60 lines drawn on chart. Values in header (e.g. MA5: 10.30) are consistent with visible data.",
+      "priority": "High",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 57
+    },
+    {
+      "id": "TC-T028",
+      "module": "Trading",
+      "featureGroup": "CHART",
+      "subFeature": "Chart View & Indicators",
+      "title": "Order book updates in real time",
+      "description": "Verify the order book right panel refreshes live with new market orders.",
+      "preconditions": "User is on Trading page with BTC/USDT loaded. WebSocket active.",
+      "testData": {
+        "pair": "BTC/USDT",
+        "_1": "Live market data streaming"
+      },
+      "rawTestData": "Pair: BTC/USDT | Live market data streaming",
+      "steps": [
+        "Load BTC/USDT trading page",
+        "Observe order book (right panel) for 30 seconds"
+      ],
+      "expected": "Order book rows refresh continuously. Ask/bid prices, quantities, and order sizes update without page reload.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 58
+    },
+    {
+      "id": "TC-T029",
+      "module": "Trading",
+      "featureGroup": "CHART",
+      "subFeature": "Chart View & Indicators",
+      "title": "Volume chart visible and correct",
+      "description": "Verify volume sub-chart below main chart shows correct bars per candle period.",
+      "preconditions": "User is on Trading page.",
+      "testData": {
+        "pair": "BTC/USDT",
+        "volume mas": "MA5, MA10, MA20 shown"
+      },
+      "rawTestData": "Pair: BTC/USDT | Volume MAs: MA5, MA10, MA20 shown",
+      "steps": [
+        "Load any trading pair",
+        "Observe the volume sub-chart below main chart"
+      ],
+      "expected": "Volume bars visible and aligned with candles. Volume MA lines (MA5, MA10, MA20) rendered correctly.",
+      "priority": "Medium",
+      "severity": "Minor",
+      "environment": "Web",
+      "rowIndex": 59
+    },
+    {
+      "id": "TC-T030",
+      "module": "Trading",
+      "featureGroup": "CHART",
+      "subFeature": "Chart View & Indicators",
+      "title": "Expand chart to fullscreen",
+      "description": "Verify chart expands to fullscreen when fullscreen icon is clicked.",
+      "preconditions": "User is on Trading page.",
+      "testData": {
+        "_0": "Chart loaded for BTC/USDT"
+      },
+      "rawTestData": "Chart loaded for BTC/USDT",
+      "steps": [
+        "Click the fullscreen icon in the chart toolbar",
+        "Observe display"
+      ],
+      "expected": "Chart expands to full browser window. Other panels hidden. Pressing Esc or clicking icon again returns to normal layout.",
+      "priority": "Low",
+      "severity": "Minor",
+      "environment": "Web",
+      "rowIndex": 60
+    },
+    {
+      "id": "TC-T031",
+      "module": "Trading",
+      "featureGroup": "AI INDICATOR",
+      "subFeature": "AI Indicator",
+      "title": "Enable AI indicator on chart",
+      "description": "Verify AI signals overlay appears on chart when AI button is activated.",
+      "preconditions": "User is on Trading page. Chart loaded.",
+      "testData": {
+        "pair": "BTC/USDT",
+        "interval": "1H"
+      },
+      "rawTestData": "Pair: BTC/USDT | Interval: 1H",
+      "steps": [
+        "Click the 'AI' button in the top-right toolbar",
+        "Observe chart"
+      ],
+      "expected": "AI signals (buy/sell indicators or prediction zones) appear on the chart. AI button is highlighted as active.",
+      "priority": "High",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 63
+    },
+    {
+      "id": "TC-T032",
+      "module": "Trading",
+      "featureGroup": "AI INDICATOR",
+      "subFeature": "AI Indicator",
+      "title": "Disable AI indicator",
+      "description": "Verify AI overlay is removed when the AI button is toggled off.",
+      "preconditions": "AI indicator is currently enabled on the chart.",
+      "testData": {
+        "ai button": "active/ON"
+      },
+      "rawTestData": "AI button: active/ON",
+      "steps": [
+        "Click the AI button again to toggle it off",
+        "Observe chart"
+      ],
+      "expected": "AI overlay removed from chart. Chart returns to clean state. AI button returns to inactive.",
+      "priority": "High",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 64
+    },
+    {
+      "id": "TC-T033",
+      "module": "Trading",
+      "featureGroup": "AI INDICATOR",
+      "subFeature": "AI Indicator",
+      "title": "AI indicator recalculates when interval changes",
+      "description": "Verify AI signals update when the chart interval is switched.",
+      "preconditions": "AI indicator is enabled. User changes interval from 1H to 4H.",
+      "testData": {
+        "interval change": "1H → 4H",
+        "ai": "enabled"
+      },
+      "rawTestData": "Interval change: 1H → 4H | AI: enabled",
+      "steps": [
+        "Enable AI indicator on 1H chart",
+        "Switch chart interval to 4H",
+        "Check AI signals"
+      ],
+      "expected": "AI signals recalculate for the 4H interval. Overlay updates automatically without needing to re-enable.",
+      "priority": "Medium",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 65
+    },
+    {
+      "id": "TC-T034",
+      "module": "Trading",
+      "featureGroup": "WATCHLIST",
+      "subFeature": "Search",
+      "title": "Search for trading pair by name",
+      "description": "Verify search returns correct results for a valid pair query.",
+      "preconditions": "User is on the pair list / watchlist screen.",
+      "testData": {
+        "search query": "'BTC'"
+      },
+      "rawTestData": "Search query: 'BTC'",
+      "steps": [
+        "Open trading pair list",
+        "Click search box",
+        "Type 'BTC'",
+        "View results"
+      ],
+      "expected": "All pairs containing 'BTC' (BTCUSDT, BTCUSDC, BTCBUSD, etc.) displayed with correct prices and 24h change.",
+      "priority": "High",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 68
+    },
+    {
+      "id": "TC-T035",
+      "module": "Trading",
+      "featureGroup": "WATCHLIST",
+      "subFeature": "Search",
+      "title": "Search is case-insensitive",
+      "description": "Verify search returns same results regardless of letter case.",
+      "preconditions": "User is on pair list screen.",
+      "testData": {
+        "search": "'btc' (all lowercase)"
+      },
+      "rawTestData": "Search: 'btc' (all lowercase)",
+      "steps": [
+        "Type 'btc' in search box",
+        "Compare results to searching 'BTC'"
+      ],
+      "expected": "Identical results for 'btc' and 'BTC'. Case does not affect search results.",
+      "priority": "Low",
+      "severity": "Minor",
+      "environment": "Web",
+      "rowIndex": 69
+    },
+    {
+      "id": "TC-T036",
+      "module": "Trading",
+      "featureGroup": "WATCHLIST",
+      "subFeature": "Search",
+      "title": "Clear search restores full pair list",
+      "description": "Verify clearing the search input restores the unfiltered pair list.",
+      "preconditions": "User has filtered list by typing 'ETH'.",
+      "testData": {
+        "search active": "'ETH'"
+      },
+      "rawTestData": "Search active: 'ETH'",
+      "steps": [
+        "Clear the search input (click X or delete text)",
+        "Observe list"
+      ],
+      "expected": "Full unfiltered pair list is restored. All brokerages and pairs visible again.",
+      "priority": "Low",
+      "severity": "Minor",
+      "environment": "Web",
+      "rowIndex": 70
+    },
+    {
+      "id": "TC-T037",
+      "module": "Trading",
+      "featureGroup": "WATCHLIST",
+      "subFeature": "Manage Watchlist",
+      "title": "Add pair to watchlist via star icon",
+      "description": "Verify clicking the star icon adds a pair to the user's personal watchlist.",
+      "preconditions": "User is logged in. SOL/USDT is not yet starred.",
+      "testData": {
+        "pair": "SOLUSDT",
+        "brokerage": "Binance",
+        "status": "unstarred"
+      },
+      "rawTestData": "Pair: SOLUSDT | Brokerage: Binance | Status: unstarred",
+      "steps": [
+        "Open pair list",
+        "Find SOLUSDT",
+        "Click the star icon"
+      ],
+      "expected": "Star icon becomes filled. SOLUSDT appears in 'All Lists' starred/favourites filter.",
+      "priority": "High",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 72
+    },
+    {
+      "id": "TC-T038",
+      "module": "Trading",
+      "featureGroup": "WATCHLIST",
+      "subFeature": "Manage Watchlist",
+      "title": "Remove pair from watchlist",
+      "description": "Verify clicking the filled star removes the pair from the watchlist.",
+      "preconditions": "SOLUSDT is currently starred in user's watchlist.",
+      "testData": {
+        "pair": "SOLUSDT",
+        "status": "starred"
+      },
+      "rawTestData": "Pair: SOLUSDT | Status: starred",
+      "steps": [
+        "Open pair list",
+        "Find SOLUSDT",
+        "Click the filled star icon"
+      ],
+      "expected": "Star icon becomes empty/unfilled. SOLUSDT no longer appears in starred/favourites list.",
+      "priority": "High",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 73
+    },
+    {
+      "id": "TC-T039",
+      "module": "Trading",
+      "featureGroup": "WATCHLIST",
+      "subFeature": "Manage Watchlist",
+      "title": "View 'My Lists' shows only starred pairs",
+      "description": "Verify switching to 'My Lists' / 'All Lists' filter shows only user's starred pairs.",
+      "preconditions": "User has at least 2 pairs starred (BTCUSDT, ETHUSDT).",
+      "testData": {
+        "starred": "BTCUSDT, ETHUSDT"
+      },
+      "rawTestData": "Starred: BTCUSDT, ETHUSDT",
+      "steps": [
+        "Open pair list",
+        "Click 'All Lists' toggle or my watchlist filter",
+        "Observe"
+      ],
+      "expected": "Only BTCUSDT and ETHUSDT shown. No unstarred pairs visible in this filter.",
+      "priority": "High",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 74
+    },
+    {
+      "id": "TC-T040",
+      "module": "Trading",
+      "featureGroup": "WATCHLIST",
+      "subFeature": "Manage Watchlist",
+      "title": "Watchlist persists after logout and login",
+      "description": "Verify watchlist is saved server-side and survives a full logout/login cycle.",
+      "preconditions": "User has BTCUSDT starred. User logs out.",
+      "testData": {
+        "starred pair": "BTCUSDT"
+      },
+      "rawTestData": "Starred pair: BTCUSDT",
+      "steps": [
+        "Star BTCUSDT",
+        "Log out completely",
+        "Log back in",
+        "Open pair list → check My Lists"
+      ],
+      "expected": "BTCUSDT is still starred after re-login. Watchlist data is persisted to user account.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "Web",
+      "rowIndex": 75
+    },
+    {
+      "id": "TC-T041",
+      "module": "Trading",
+      "featureGroup": "WATCHLIST",
+      "subFeature": "Manage Watchlist",
+      "title": "24h change % in pair list matches chart header",
+      "description": "Verify 24h change % values in the pair list are accurate and consistent with chart header data.",
+      "preconditions": "User is on the pair list screen.",
+      "testData": {
+        "pair": "BTC/USDT",
+        "_1": "Live data active"
+      },
+      "rawTestData": "Pair: BTC/USDT | Live data active",
+      "steps": [
+        "Note BTC/USDT 24h change % in pair list",
+        "Click BTC/USDT to open chart",
+        "Compare 24h change % in chart header"
+      ],
+      "expected": "24h change % in pair list matches the value shown in the chart header for the same pair.",
+      "priority": "High",
+      "severity": "Major",
+      "environment": "Web",
+      "rowIndex": 76
+    },
+    {
+      "id": "SB-001",
+      "module": "Strategy Builder",
+      "featureGroup": "AI Strategy Generation",
+      "subFeature": "AI Generation",
+      "title": "AI-generated tree matches described logic",
+      "description": "Verify the strategy tree generated by AI correctly implements the logic described in the prompt — not just a plausible-looking tree that doesn't match the intent.",
+      "preconditions": "User is in Strategy Builder with AI mode active",
+      "testData": {
+        "prompt": "'Buy BTCUSDT when EMA 50 crosses above EMA 200 on 1H chart'"
+      },
+      "rawTestData": "Prompt: 'Buy BTCUSDT when EMA 50 crosses above EMA 200 on 1H chart'",
+      "steps": [
+        "Open Strategy Builder → AI mode",
+        "Enter the prompt",
+        "Review the generated condition tree"
+      ],
+      "expected": "AI generates a tree with correct EMA 50/200 crossover logic, correct symbol and timeframe. Condition blocks match the described intent.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 3
+    },
+    {
+      "id": "SB-002",
+      "module": "Strategy Builder",
+      "featureGroup": "AI Strategy Generation",
+      "subFeature": "AI Generation",
+      "title": "AI prompts for missing parameters before generating",
+      "description": "Verify AI does not silently assume missing parameters — it must ask the user to clarify before producing the tree.",
+      "preconditions": "User is in AI mode",
+      "testData": {
+        "vague prompt": "'Buy when RSI is low'"
+      },
+      "rawTestData": "Vague prompt: 'Buy when RSI is low'",
+      "steps": [
+        "Enter a vague prompt missing key details (symbol, period, threshold)",
+        "Observe AI response"
+      ],
+      "expected": "AI asks follow-up questions to clarify missing details (symbol, RSI period, threshold value) before generating the tree.",
+      "priority": "High",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 4
+    },
+    {
+      "id": "SB-003",
+      "module": "Strategy Builder",
+      "featureGroup": "AI Strategy Generation",
+      "subFeature": "AI Generation",
+      "title": "AI-generated strategy executes correctly in backtest",
+      "description": "Verify the AI-generated strategy produces meaningful backtest results — not zero trades or errors.",
+      "preconditions": "AI-generated strategy tree is loaded in editor",
+      "testData": {
+        "_0": "Run backtest on BTCUSDT 1D, Jan 2023–Dec 2024"
+      },
+      "rawTestData": "Run backtest on BTCUSDT 1D, Jan 2023–Dec 2024",
+      "steps": [
+        "Apply AI-generated strategy",
+        "Run backtest with a defined period",
+        "Review results"
+      ],
+      "expected": "Backtest completes without errors. Trade history shows entries/exits matching the defined condition. Results panel populates correctly.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 5
+    },
+    {
+      "id": "SB-004",
+      "module": "Strategy Builder",
+      "featureGroup": "AI Strategy Generation",
+      "subFeature": "AI Generation",
+      "title": "JSON export and re-import produces identical strategy tree",
+      "description": "Verify exported strategy JSON re-imports without loss of logic or parameters.",
+      "preconditions": "Strategy with multiple condition and action blocks is built",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Export strategy as JSON",
+        "Create new strategy and import the JSON",
+        "Compare original and re-imported trees"
+      ],
+      "expected": "Re-imported strategy tree is identical to the original. All blocks, parameters, and logic connectors are preserved.",
+      "priority": "Medium",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 6
+    },
+    {
+      "id": "SB-005",
+      "module": "Strategy Builder",
+      "featureGroup": "Condition & Logic Block",
+      "subFeature": "Operand Types",
+      "title": "Configure Left Operand as Bar Window (TradeClose) — condition saves correctly",
+      "description": "Verify that selecting Bar Window as an operand and configuring its parameters (Bar Type, Bar Property, Resolution, Interval, Symbol) saves and evaluates correctly.",
+      "preconditions": "User is building a condition block in the Alert/Strategy editor",
+      "testData": {
+        "bar type": "TradeBar, Bar Property: TradeClose, Resolution: 1H, Interval: 1, Symbol: BTCUSDT"
+      },
+      "rawTestData": "Bar Type: TradeBar, Bar Property: TradeClose, Resolution: 1H, Interval: 1, Symbol: BTCUSDT",
+      "steps": [
+        "Add an If Condition block",
+        "Click Left Operand → select Bar Window",
+        "Fill in: Bar Type=TradeBar, Bar Property=TradeClose, Resolution=1H, Interval=1, Symbol=BTCUSDT",
+        "Set operator (e.g. >) and Right Operand as Constant (70000)",
+        "Save"
+      ],
+      "expected": "Condition saves successfully. Bar Window parameters are persisted correctly. Block displays the configured operand details.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 9
+    },
+    {
+      "id": "SB-006",
+      "module": "Strategy Builder",
+      "featureGroup": "Condition & Logic Block",
+      "subFeature": "Operand Types",
+      "title": "Configure Left Operand as Indicator (e.g. RSI 14) — condition evaluates correctly",
+      "description": "Verify that an Indicator operand with correct period and resolution saves and is used correctly in condition evaluation.",
+      "preconditions": "User is building a condition block",
+      "testData": {
+        "indicator": "RSI, Period: 14, Resolution: 1H, compared to Constant: 30"
+      },
+      "rawTestData": "Indicator: RSI, Period: 14, Resolution: 1H, compared to Constant: 30",
+      "steps": [
+        "Add If Condition block",
+        "Click Left Operand → select Indicator → choose RSI",
+        "Set Period=14, Resolution=1H",
+        "Set operator < and Right Operand=Constant(30)",
+        "Save"
+      ],
+      "expected": "Condition saves with RSI(14) on 1H correctly configured. In backtest/live, condition fires only when RSI drops below 30.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 10
+    },
+    {
+      "id": "SB-007",
+      "module": "Strategy Builder",
+      "featureGroup": "Condition & Logic Block",
+      "subFeature": "Operand Types",
+      "title": "Configure condition using CandlestickPattern operand",
+      "description": "Verify that CandlestickPattern can be selected as an operand and the pattern type is saved correctly.",
+      "preconditions": "User is building a condition block",
+      "testData": {
+        "pattern type": "e.g. Hammer or Engulfing (whichever is available)"
+      },
+      "rawTestData": "Pattern type: e.g. Hammer or Engulfing (whichever is available)",
+      "steps": [
+        "Add If Condition block",
+        "Click Left Operand → select CandlestickPattern",
+        "Choose a pattern type and configure symbol/resolution",
+        "Save"
+      ],
+      "expected": "CandlestickPattern operand saves correctly. Pattern type and parameters are persisted. Condition block reflects the selection.",
+      "priority": "Medium",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 11
+    },
+    {
+      "id": "SB-008",
+      "module": "Strategy Builder",
+      "featureGroup": "Condition & Logic Block",
+      "subFeature": "Operand Types",
+      "title": "Use Constant as operand — fixed numeric value accepted on both sides",
+      "description": "Verify Constant can be used as either left or right operand and the value is stored correctly.",
+      "preconditions": "User is building a condition block",
+      "testData": {
+        "constant value": "50000"
+      },
+      "rawTestData": "Constant value: 50000",
+      "steps": [
+        "Add If Condition block",
+        "Set Left Operand = Constant (50000)",
+        "Set operator and Right Operand = Bar Window or Indicator",
+        "Save"
+      ],
+      "expected": "Constant value is accepted and persisted. Condition block shows the hardcoded value on the configured side.",
+      "priority": "Medium",
+      "severity": "Low",
+      "environment": "All",
+      "rowIndex": 12
+    },
+    {
+      "id": "SB-009",
+      "module": "Strategy Builder",
+      "featureGroup": "Condition & Logic Block",
+      "subFeature": "AND / OR Logic",
+      "title": "Switch condition logic connector from AND to OR",
+      "description": "Verify the logic connector between conditions can be toggled and the change is saved.",
+      "preconditions": "If Condition block with at least 2 sub-conditions exists",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Add If Condition block with 2 conditions",
+        "Set logic connector to AND",
+        "Save and verify",
+        "Edit → switch connector to OR",
+        "Save again"
+      ],
+      "expected": "Logic connector toggles between AND and OR. The selected value is persisted after save. The condition block visually reflects the change.",
+      "priority": "High",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 14
+    },
+    {
+      "id": "SB-010",
+      "module": "Strategy Builder",
+      "featureGroup": "Condition & Logic Block",
+      "subFeature": "AND / OR Logic",
+      "title": "Multiple AND conditions — all must be true to trigger",
+      "description": "Verify a strategy with 2 AND conditions only executes when both conditions are simultaneously satisfied.",
+      "preconditions": "Strategy with 2 AND conditions built and backtested",
+      "testData": {
+        "condition 1": "RSI(14) < 30; Condition 2: Bar Window Close < 200-period MA"
+      },
+      "rawTestData": "Condition 1: RSI(14) < 30; Condition 2: Bar Window Close < 200-period MA",
+      "steps": [
+        "Build strategy with 2 conditions joined by AND",
+        "Run backtest",
+        "Review trade entries — verify each entry satisfies both conditions"
+      ],
+      "expected": "Every trade entry in backtest results occurs only when BOTH conditions are true at the same bar. No entries where only one condition is met.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 15
+    },
+    {
+      "id": "SB-011",
+      "module": "Strategy Builder",
+      "featureGroup": "Condition & Logic Block",
+      "subFeature": "AND / OR Logic",
+      "title": "Multiple OR conditions — any one condition triggers execution",
+      "description": "Verify a strategy with OR logic executes when at least one condition is met.",
+      "preconditions": "Strategy with 2 OR conditions built and backtested",
+      "testData": {
+        "condition 1": "RSI(14) < 30; Condition 2: Bar Window Close > Upper Bollinger Band"
+      },
+      "rawTestData": "Condition 1: RSI(14) < 30; Condition 2: Bar Window Close > Upper Bollinger Band",
+      "steps": [
+        "Build strategy with 2 conditions joined by OR",
+        "Run backtest",
+        "Review trade entries — verify entries occur when either condition alone is true"
+      ],
+      "expected": "Trade entries occur whenever at least one condition is true. Entries are more frequent than with AND logic for the same conditions.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 16
+    },
+    {
+      "id": "SB-012",
+      "module": "Strategy Builder",
+      "featureGroup": "Condition & Logic Block",
+      "subFeature": "AND / OR Logic",
+      "title": "Incomplete condition block (missing operand or value) → save blocked",
+      "description": "Verify that an unfinished condition block prevents saving or running the strategy.",
+      "preconditions": "User has added an If Condition block but left operand or value empty",
+      "testData": {
+        "_0": "Leave Right Operand value blank"
+      },
+      "rawTestData": "Leave Right Operand value blank",
+      "steps": [
+        "Add If Condition block",
+        "Configure Left Operand but leave Right Operand empty",
+        "Click Save or Run Backtest"
+      ],
+      "expected": "System displays a validation error pointing to the incomplete block. Save/Run is blocked until the condition is fully configured.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 17
+    },
+    {
+      "id": "SB-013",
+      "module": "Strategy Builder",
+      "featureGroup": "Order Block Behaviour",
+      "subFeature": "Order Execution",
+      "title": "Place Order (Single) — correct quantity and entry price in backtest",
+      "description": "Verify a single market order fires at the correct price and quantity when the condition triggers.",
+      "preconditions": "Strategy with a single Place Order block connected to an If Condition",
+      "testData": {
+        "symbol": "BTCUSDT, Quantity: 0.1, Order type: Market"
+      },
+      "rawTestData": "Symbol: BTCUSDT, Quantity: 0.1, Order type: Market",
+      "steps": [
+        "Build strategy: If RSI<30 → Place Order (Market, 0.1 BTC)",
+        "Run backtest",
+        "Check Trades panel"
+      ],
+      "expected": "Each trade entry shows correct symbol, quantity (0.1), and execution at market price of the trigger bar.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 20
+    },
+    {
+      "id": "SB-014",
+      "module": "Strategy Builder",
+      "featureGroup": "Order Block Behaviour",
+      "subFeature": "Order Execution",
+      "title": "Bracket Order — Take Profit fills correctly before Stop Loss when price rises",
+      "description": "Verify TP fills and SL is cancelled when price moves favourably.",
+      "preconditions": "Strategy with Bracket Order (TP and SL set)",
+      "testData": {
+        "tp": "+2%, SL: -1%"
+      },
+      "rawTestData": "TP: +2%, SL: -1%",
+      "steps": [
+        "Build strategy with Bracket Order (TP=+2%, SL=-1%)",
+        "Run backtest on a period with clear uptrend",
+        "Find a trade where price hit TP"
+      ],
+      "expected": "TP order fills at the correct price. Corresponding SL order is cancelled after TP fills. Trade PnL is positive.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 21
+    },
+    {
+      "id": "SB-015",
+      "module": "Strategy Builder",
+      "featureGroup": "Order Block Behaviour",
+      "subFeature": "Order Execution",
+      "title": "Bracket Order — Stop Loss fires and TP is cancelled when price drops",
+      "description": "Verify SL fires and TP is cancelled when price moves against the position.",
+      "preconditions": "Strategy with Bracket Order (TP and SL set)",
+      "testData": {
+        "tp": "+2%, SL: -1%"
+      },
+      "rawTestData": "TP: +2%, SL: -1%",
+      "steps": [
+        "Build strategy with Bracket Order (TP=+2%, SL=-1%)",
+        "Run backtest on a period with a drop after entry",
+        "Find a trade where SL was hit"
+      ],
+      "expected": "SL order fills at the correct price. TP order is cancelled after SL fires. Trade PnL reflects the -1% loss.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 22
+    },
+    {
+      "id": "SB-016",
+      "module": "Strategy Builder",
+      "featureGroup": "Order Block Behaviour",
+      "subFeature": "Order Execution",
+      "title": "Place Order quantity as percentage — position size scales with equity",
+      "description": "Verify that a percentage-based quantity calculates the correct position size based on current equity.",
+      "preconditions": "Strategy using percentage quantity (e.g. 10% of equity)",
+      "testData": {
+        "initial equity": "10,000 USD, Order: 10% of equity"
+      },
+      "rawTestData": "Initial equity: 10,000 USD, Order: 10% of equity",
+      "steps": [
+        "Set initial capital to 10,000 USD",
+        "Configure Place Order: quantity=10% of equity",
+        "Run backtest",
+        "Check first order quantity"
+      ],
+      "expected": "First order quantity equals 10% of 10,000 USD = 1,000 USD worth of the asset. Subsequent orders scale correctly as equity changes.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 23
+    },
+    {
+      "id": "SB-017",
+      "module": "Strategy Builder",
+      "featureGroup": "Advanced Action Blocks",
+      "subFeature": "Liquidate, Cancel, Set Holding, Stop Strategy",
+      "title": "Liquidate closes 100% of open position — not a partial close",
+      "description": "Verify Liquidate block closes the entire open position, not just part of it.",
+      "preconditions": "Strategy with an open position and a Liquidate block on exit condition",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Build strategy: Entry → If exit condition → Liquidate",
+        "Run backtest",
+        "Check trade close details"
+      ],
+      "expected": "When exit condition fires, the full open position is closed at market. No residual position remains. Trade PnL reflects full close.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 26
+    },
+    {
+      "id": "SB-018",
+      "module": "Strategy Builder",
+      "featureGroup": "Advanced Action Blocks",
+      "subFeature": "Liquidate, Cancel, Set Holding, Stop Strategy",
+      "title": "Cancel Order prevents a pending limit order from filling after price moves past limit",
+      "description": "Verify Cancel Order block correctly voids a pending order before it fills.",
+      "preconditions": "Strategy with a pending limit order and a Cancel block triggered by a condition",
+      "testData": {
+        "_0": "Limit order set 1% below current price"
+      },
+      "rawTestData": "Limit order set 1% below current price",
+      "steps": [
+        "Build strategy: Place Limit Order → If cancellation condition → Cancel Order",
+        "Run backtest where cancel condition fires before limit is reached"
+      ],
+      "expected": "Limit order is cancelled before filling. No trade entry recorded for that bar. Order does not fill even if price later reaches the limit.",
+      "priority": "High",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 27
+    },
+    {
+      "id": "SB-019",
+      "module": "Strategy Builder",
+      "featureGroup": "Advanced Action Blocks",
+      "subFeature": "Liquidate, Cancel, Set Holding, Stop Strategy",
+      "title": "Set Holding rebalances to target percentage — buys or sells the correct delta",
+      "description": "Verify Set Holding calculates and executes the correct delta order to reach the target allocation.",
+      "preconditions": "Strategy using Set Holding block with a defined target %",
+      "testData": {
+        "current position": "5% of equity; Target: 20% of equity"
+      },
+      "rawTestData": "Current position: 5% of equity; Target: 20% of equity",
+      "steps": [
+        "Build strategy with Set Holding (target=20% of equity)",
+        "Run backtest from a state where current holding is 5%",
+        "Check resulting order size"
+      ],
+      "expected": "System places a buy order for the delta (15% of equity) to reach the 20% target. If already over-allocated, a sell order is placed for the excess.",
+      "priority": "High",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 28
+    },
+    {
+      "id": "SB-020",
+      "module": "Strategy Builder",
+      "featureGroup": "Advanced Action Blocks",
+      "subFeature": "Liquidate, Cancel, Set Holding, Stop Strategy",
+      "title": "Stop Strategy halts all subsequent execution — no further orders after trigger",
+      "description": "Verify that once Stop Strategy fires, no further condition checks or orders are executed.",
+      "preconditions": "Strategy with a Stop Strategy block triggered by a loss threshold",
+      "testData": {
+        "stop condition": "Net PnL < -5%"
+      },
+      "rawTestData": "Stop condition: Net PnL < -5%",
+      "steps": [
+        "Build strategy with Stop Strategy block: If Net PnL < -5% → Stop Strategy",
+        "Run backtest on a volatile period",
+        "Check orders after the stop trigger bar"
+      ],
+      "expected": "After Stop Strategy fires, no new orders are placed for the remainder of the backtest period. Strategy effectively halts.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 29
+    },
+    {
+      "id": "SB-021",
+      "module": "Strategy Builder",
+      "featureGroup": "Advanced Action Blocks",
+      "subFeature": "Liquidate, Cancel, Set Holding, Stop Strategy",
+      "title": "Advanced action does NOT fire when its parent condition is false",
+      "description": "Verify action blocks are only executed when their parent If Condition is true.",
+      "preconditions": "Strategy with an action block nested inside an If Condition",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Build strategy: If RSI > 70 → Liquidate",
+        "Run backtest",
+        "Verify Liquidate only fires on bars where RSI > 70"
+      ],
+      "expected": "Liquidate (or other action) fires only on bars where the parent condition is true. No action on bars where the condition is false.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 30
+    },
+    {
+      "id": "SB-022",
+      "module": "Strategy Builder",
+      "featureGroup": "Save, Update & Lifecycle",
+      "subFeature": "Strategy Lifecycle",
+      "title": "Updating a strategy while a paper trade is running — behaviour is defined and safe",
+      "description": "Verify that editing a strategy mid-run does not corrupt the running paper trade or cause unexpected orders.",
+      "preconditions": "A strategy is actively running in Paper Trade mode",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Start a Paper Trade",
+        "Navigate to Strategy Builder and edit the strategy (e.g. change a condition value)",
+        "Save the update",
+        "Observe paper trade behaviour"
+      ],
+      "expected": "System either applies the update safely or shows a clear warning about editing a live strategy. No duplicate orders, crashes, or undefined behaviour.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 33
+    },
+    {
+      "id": "SB-023",
+      "module": "Strategy Builder",
+      "featureGroup": "Save, Update & Lifecycle",
+      "subFeature": "Strategy Lifecycle",
+      "title": "Deleting a strategy that has active executions is blocked or requires confirmation",
+      "description": "Verify the system prevents silent deletion of strategies with active runs.",
+      "preconditions": "Strategy has an active Paper Trade or Live Trade",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Attempt to delete a strategy that is currently running",
+        "Observe system response"
+      ],
+      "expected": "System either blocks deletion with a clear message or shows a confirmation dialog warning that active executions exist. No silent deletion.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 34
+    },
+    {
+      "id": "SB-024",
+      "module": "Strategy Builder",
+      "featureGroup": "Save, Update & Lifecycle",
+      "subFeature": "Strategy Lifecycle",
+      "title": "Cloned strategy is fully independent from the original",
+      "description": "Verify edits to a cloned strategy do not affect the original, and vice versa.",
+      "preconditions": "A strategy has been cloned",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Clone a strategy",
+        "Modify the clone (change a condition value)",
+        "Check the original strategy"
+      ],
+      "expected": "Original strategy is unchanged after editing the clone. Both strategies maintain independent configurations.",
+      "priority": "High",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 35
+    },
+    {
+      "id": "SB-025",
+      "module": "Strategy Builder",
+      "featureGroup": "Results Accuracy & Edge Cases",
+      "subFeature": "Backtest Results",
+      "title": "Backtest PnL matches the sum of individual trade PnLs",
+      "description": "Verify the total Net Profit shown in results equals the sum of all individual trade PnLs.",
+      "preconditions": "Backtest has completed with multiple trades",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Run backtest",
+        "Note the Net Profit in the overview",
+        "Open Trades panel and sum all individual PnL values"
+      ],
+      "expected": "Sum of individual trade PnLs equals the Net Profit shown in the overview (allowing for rounding). No unexplained discrepancy.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 38
+    },
+    {
+      "id": "SB-026",
+      "module": "Strategy Builder",
+      "featureGroup": "Results Accuracy & Edge Cases",
+      "subFeature": "Backtest Results",
+      "title": "Backtest is deterministic — same inputs produce same results every run",
+      "description": "Verify running the same backtest twice produces identical results.",
+      "preconditions": "Strategy and backtest parameters are fixed",
+      "testData": {
+        "_0": "Same symbol, timeframe, date range, initial capital"
+      },
+      "rawTestData": "Same symbol, timeframe, date range, initial capital",
+      "steps": [
+        "Run backtest and record Net Profit, trade count, Sharpe Ratio",
+        "Run the same backtest again without changing anything",
+        "Compare results"
+      ],
+      "expected": "Both runs produce identical Net Profit, trade count, and all metrics. Backtest engine is not randomised.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 39
+    },
+    {
+      "id": "SB-027",
+      "module": "Strategy Builder",
+      "featureGroup": "Results Accuracy & Edge Cases",
+      "subFeature": "Backtest Results",
+      "title": "Backtest with initial capital insufficient for first order — handled gracefully",
+      "description": "Verify the system handles underfunded backtests without crashing.",
+      "preconditions": "Strategy requires more capital than the initial balance",
+      "testData": {
+        "initial capital": "10 USD; Order: 1 BTC at market"
+      },
+      "rawTestData": "Initial capital: 10 USD; Order: 1 BTC at market",
+      "steps": [
+        "Set initial capital to 10 USD",
+        "Configure order for 1 BTC",
+        "Run backtest"
+      ],
+      "expected": "System displays a clear error or skips the order with a log entry. Backtest does not crash. Results show zero trades or an appropriate error message.",
+      "priority": "High",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 40
+    },
+    {
+      "id": "SB-028",
+      "module": "Strategy Builder",
+      "featureGroup": "Results Accuracy & Edge Cases",
+      "subFeature": "Backtest Results",
+      "title": "Backtest period with zero signals — results show empty trade history, not errors",
+      "description": "Verify a strategy that generates no signals over a period returns an empty result cleanly.",
+      "preconditions": "Strategy with very restrictive conditions unlikely to trigger",
+      "testData": {
+        "condition": "RSI < 5 (extremely rare)"
+      },
+      "rawTestData": "Condition: RSI < 5 (extremely rare)",
+      "steps": [
+        "Build strategy with RSI < 5 condition",
+        "Run backtest over a 1-year period",
+        "Review results"
+      ],
+      "expected": "Results panel shows 0 trades. No errors, null values, or crashes. Metrics show 0 or N/A as appropriate.",
+      "priority": "Medium",
+      "severity": "Low",
+      "environment": "All",
+      "rowIndex": 41
+    },
+    {
+      "id": "SB-029",
+      "module": "Strategy Builder",
+      "featureGroup": "Results Accuracy & Edge Cases",
+      "subFeature": "Backtest Results",
+      "title": "Backtest Sharpe Ratio calculation is consistent with trade data",
+      "description": "Verify the reported Sharpe Ratio is plausible given the win rate and return data.",
+      "preconditions": "Backtest with at least 10 trades completed",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Run backtest",
+        "Note Sharpe Ratio, Return %, Win Rate",
+        "Cross-check: high win rate + positive return should yield Sharpe > 1"
+      ],
+      "expected": "Sharpe Ratio is directionally consistent with the return and volatility data. Positive-return strategies with good win rates show Sharpe > 0.",
+      "priority": "Medium",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 42
+    },
+    {
+      "id": "SB-030",
+      "module": "Strategy Builder",
+      "featureGroup": "Results Accuracy & Edge Cases",
+      "subFeature": "Backtest Results",
+      "title": "Backtest result after publishing to Algo Hub — metrics match original backtest",
+      "description": "Verify metrics displayed in Algo Hub match the backtest that was published.",
+      "preconditions": "Strategy has been backtested and published to Algo Hub",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Run backtest and record key metrics (Net Profit, Win Rate, Sharpe, Drawdown)",
+        "Publish strategy to Algo Hub",
+        "Open strategy in Algo Hub and compare metrics"
+      ],
+      "expected": "All metrics in Algo Hub match the original backtest results exactly. No rounding or display differences beyond 2 decimal places.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 43
+    },
+    {
+      "id": "SB-031",
+      "module": "Strategy Builder",
+      "featureGroup": "Paper Trade",
+      "subFeature": "Paper Trade Execution",
+      "title": "Paper trade places virtual order exactly when live condition fires — not on delay",
+      "description": "Verify the paper trade order timestamp matches the bar where the condition triggered.",
+      "preconditions": "Strategy is running in Paper Trade mode",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Start paper trade",
+        "Wait for condition to fire",
+        "Check order timestamp vs condition trigger bar time"
+      ],
+      "expected": "Virtual order is placed on the same bar the condition fired. No bar delay. Order entry price matches the bar's relevant price (open/close depending on config).",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 46
+    },
+    {
+      "id": "SB-032",
+      "module": "Strategy Builder",
+      "featureGroup": "Paper Trade",
+      "subFeature": "Paper Trade Execution",
+      "title": "Paper trade equity updates correctly after each virtual order fill",
+      "description": "Verify the equity balance in the paper trade updates after each trade.",
+      "preconditions": "Paper trade is running with at least one completed trade",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Note equity before a trade",
+        "Let a condition trigger and fill",
+        "Check equity after fill"
+      ],
+      "expected": "Equity updates correctly: decreases by position cost on entry, increases/decreases by PnL on exit.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 47
+    },
+    {
+      "id": "SB-033",
+      "module": "Strategy Builder",
+      "featureGroup": "Paper Trade",
+      "subFeature": "Paper Trade Execution",
+      "title": "Paper trade does not generate any real orders on the connected brokerage",
+      "description": "Verify paper trade is fully isolated from real order execution.",
+      "preconditions": "Brokerage account is connected; paper trade is running",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Start paper trade on a strategy",
+        "Let conditions fire and virtual orders execute",
+        "Check real brokerage account for any orders"
+      ],
+      "expected": "Zero real orders appear on the brokerage account. Paper trade is completely isolated from live execution.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "All",
+      "rowIndex": 48
+    },
+    {
+      "id": "SB-034",
+      "module": "Strategy Builder",
+      "featureGroup": "Paper Trade",
+      "subFeature": "Paper Trade Execution",
+      "title": "Paper trade result is consistent with backtest over the same period",
+      "description": "Verify paper trade PnL approximately matches a backtest run over the same period and conditions.",
+      "preconditions": "Strategy has both a completed backtest and paper trade over the same date range",
+      "testData": {
+        "_0": "Same symbol, timeframe, strategy config"
+      },
+      "rawTestData": "Same symbol, timeframe, strategy config",
+      "steps": [
+        "Note backtest results for a specific period",
+        "Run paper trade over the same period",
+        "Compare Net Profit and trade count"
+      ],
+      "expected": "Paper trade results are within a reasonable margin of backtest results. Significant discrepancy (>10%) is flagged for investigation.",
+      "priority": "Medium",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 49
+    },
+    {
+      "id": "SB-035",
+      "module": "Strategy Builder",
+      "featureGroup": "Live Trade",
+      "subFeature": "Live Trade Execution",
+      "title": "Live trade places a real order on the brokerage when condition fires",
+      "description": "Verify a real order appears on the brokerage exchange when the strategy condition triggers.",
+      "preconditions": "Brokerage account is connected with sufficient balance; live trade is running",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Start live trade",
+        "Wait for condition to fire (or use a condition likely to trigger quickly in test)",
+        "Check brokerage account for order"
+      ],
+      "expected": "A real order appears on the brokerage with the correct symbol, quantity, and type. Order timestamp matches the condition trigger time.",
+      "priority": "High",
+      "severity": "Critical",
+      "environment": "All",
+      "rowIndex": 52
+    },
+    {
+      "id": "SB-036",
+      "module": "Strategy Builder",
+      "featureGroup": "Live Trade",
+      "subFeature": "Live Trade Execution",
+      "title": "Live trade with insufficient brokerage balance — order failure handled without crash",
+      "description": "Verify the system handles insufficient funds gracefully during live execution.",
+      "preconditions": "Brokerage account balance is below the required order size",
+      "testData": {
+        "balance": "1 USD; Order: 1 BTC at market"
+      },
+      "rawTestData": "Balance: 1 USD; Order: 1 BTC at market",
+      "steps": [
+        "Connect an account with near-zero balance",
+        "Start live trade",
+        "Wait for condition to fire"
+      ],
+      "expected": "System logs an insufficient balance error. No crash or unhandled exception. BeeTrade dashboard shows the failed order with a clear error message.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 53
+    },
+    {
+      "id": "SB-037",
+      "module": "Strategy Builder",
+      "featureGroup": "Live Trade",
+      "subFeature": "Live Trade Execution",
+      "title": "Stopping live trade does not automatically close open real positions",
+      "description": "Verify stopping the strategy leaves existing brokerage positions open.",
+      "preconditions": "Live trade has an open real position on the brokerage",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Start live trade and let a position open",
+        "Stop the live trade from BeeTrade",
+        "Check brokerage account"
+      ],
+      "expected": "Open position remains on the brokerage after stopping. No automatic close order is sent. User is responsible for manually managing the position.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 54
+    },
+    {
+      "id": "SB-038",
+      "module": "Strategy Builder",
+      "featureGroup": "Live Trade",
+      "subFeature": "Live Trade Execution",
+      "title": "Live trade PnL in BeeTrade dashboard matches brokerage PnL reporting",
+      "description": "Verify the PnL shown in BeeTrade matches the actual PnL on the brokerage side.",
+      "preconditions": "Live trade has completed at least one round-trip trade",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Complete a buy + sell cycle via live trade",
+        "Note PnL shown in BeeTrade",
+        "Check the same trade on the brokerage"
+      ],
+      "expected": "PnL values match within fee rounding tolerance. Any discrepancy is explainable by exchange fees or timing differences.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 55
+    },
+    {
+      "id": "BOT-001",
+      "module": "Bots",
+      "featureGroup": "Live Tab",
+      "subFeature": "Bot Cards",
+      "title": "Live tab shows all active bots with mini charts",
+      "description": "Verify that the Live tab displays every running bot as a card with a mini chart preview.",
+      "preconditions": "At least 1 bot is running (Paper or Live mode)",
+      "testData": {
+        "_0": "Any active symbol (e.g. BTCUSDT)"
+      },
+      "rawTestData": "Any active symbol (e.g. BTCUSDT)",
+      "steps": [
+        "Open Bots → Live tab",
+        "Observe bot cards in the right panel"
+      ],
+      "expected": "Each running bot displays its symbol, badge (PAPER/LIVE), PnL%, and a mini chart. No blank cards.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 3
+    },
+    {
+      "id": "BOT-002",
+      "module": "Bots",
+      "featureGroup": "Live Tab",
+      "subFeature": "Bot Cards",
+      "title": "Portfolio stats are accurate (Net Profit, Total Equity, Win Rate, etc.)",
+      "description": "Verify the left-panel aggregate stats correctly reflect the sum of all running bots.",
+      "preconditions": "Multiple bots running with trade activity",
+      "testData": {
+        "_0": "Known expected totals from individual bot detail pages"
+      },
+      "rawTestData": "Known expected totals from individual bot detail pages",
+      "steps": [
+        "Open Bots → Live tab",
+        "Note Net Profit, Total Equity, Win Rate, Max Drawdown, Avg Win/Loss, Profit Factor",
+        "Cross-check against individual bot details"
+      ],
+      "expected": "All aggregate stats match the sum/average of individual bot values. Values update without page refresh.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 4
+    },
+    {
+      "id": "BOT-003",
+      "module": "Bots",
+      "featureGroup": "Live Tab",
+      "subFeature": "Bot Cards",
+      "title": "Best / Worst strategy labels update correctly",
+      "description": "Verify the Best and Worst labels in the portfolio summary point to the correct bots.",
+      "preconditions": "At least 2 bots with different PnL values",
+      "testData": {
+        "_0": "Bots with clearly different Net Profit values"
+      },
+      "rawTestData": "Bots with clearly different Net Profit values",
+      "steps": [
+        "Note which bot has highest and lowest Net Profit",
+        "Open Bots → Live tab",
+        "Check 'Best' and 'Worst' labels"
+      ],
+      "expected": "Best label shows the bot with highest Net Profit. Worst shows the bot with lowest (or most negative) Net Profit.",
+      "priority": "Medium",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 5
+    },
+    {
+      "id": "BOT-004",
+      "module": "Bots",
+      "featureGroup": "Live Tab",
+      "subFeature": "Bot Cards",
+      "title": "Strategy list shows correct Net Profit & PnL% per bot",
+      "description": "Verify the bottom strategy list rows display accurate per-bot Net Profit and PnL% figures.",
+      "preconditions": "At least 1 bot running",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Open Bots → Live tab",
+        "Look at the strategy list at the bottom of the left panel",
+        "Compare Net Profit and PnL% values with bot detail pages"
+      ],
+      "expected": "Each row's Net Profit and PnL% values match the corresponding bot's detail page. Positive values shown in green, negative in red.",
+      "priority": "High",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 6
+    },
+    {
+      "id": "BOT-005",
+      "module": "Bots",
+      "featureGroup": "Live Tab",
+      "subFeature": "Bot Cards",
+      "title": "No active bots → empty state shown in Live tab",
+      "description": "Verify the Live tab handles zero running bots gracefully without errors.",
+      "preconditions": "All bots are stopped or no bots exist",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Stop all running bots",
+        "Open Bots → Live tab"
+      ],
+      "expected": "Empty state message is shown (e.g. 'No active bots'). No broken charts or null values displayed.",
+      "priority": "Medium",
+      "severity": "Low",
+      "environment": "All",
+      "rowIndex": 7
+    },
+    {
+      "id": "BOT-006",
+      "module": "Bots",
+      "featureGroup": "Activity Tab",
+      "subFeature": "Bot List",
+      "title": "Activity tab lists all bots (Running + Stopped)",
+      "description": "Verify that the Activity tab shows both currently running bots and all historical/stopped bots.",
+      "preconditions": "At least 1 running and 1 stopped bot exist",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Open Bots → Activity tab",
+        "Check that the list shows bots with 'Running' and 'Stopped' statuses"
+      ],
+      "expected": "Both running and stopped bots appear in the list. Record count matches the displayed result count.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 10
+    },
+    {
+      "id": "BOT-007",
+      "module": "Bots",
+      "featureGroup": "Activity Tab",
+      "subFeature": "Bot List",
+      "title": "Bot row displays correct values: Equity, Net Profit, Return %, Period, Duration",
+      "description": "Verify each row in the Activity list shows accurate data columns.",
+      "preconditions": "At least 1 bot with trade history",
+      "testData": {
+        "_0": "Known values from bot detail page"
+      },
+      "rawTestData": "Known values from bot detail page",
+      "steps": [
+        "Open Bots → Activity tab",
+        "Select a bot and compare its row values (Equity, Net Profit, Return %, Period, Duration) against its Detail page"
+      ],
+      "expected": "All column values match the bot's detail page. No '--' or N/A in rows where data should exist.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 11
+    },
+    {
+      "id": "BOT-008",
+      "module": "Bots",
+      "featureGroup": "Activity Tab",
+      "subFeature": "Filters & Sort",
+      "title": "Filter by Type (e.g. only GRID bots)",
+      "description": "Verify the Type filter returns only bots of the selected type.",
+      "preconditions": "Multiple bot types exist in the list",
+      "testData": {
+        "_0": "Select 'GRID' from Type dropdown"
+      },
+      "rawTestData": "Select 'GRID' from Type dropdown",
+      "steps": [
+        "Open Bots → Activity tab",
+        "Click TYPE → select GRID",
+        "Review results"
+      ],
+      "expected": "Only GRID bots are shown. Result count updates. Other bot types are hidden.",
+      "priority": "High",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 13
+    },
+    {
+      "id": "BOT-009",
+      "module": "Bots",
+      "featureGroup": "Activity Tab",
+      "subFeature": "Filters & Sort",
+      "title": "Filter by Status: Running vs Stopped",
+      "description": "Verify the Status filter correctly filters bots by their current status.",
+      "preconditions": "Both Running and Stopped bots exist",
+      "testData": {
+        "_0": "Status = 'Running', then 'Stopped'"
+      },
+      "rawTestData": "Status = 'Running', then 'Stopped'",
+      "steps": [
+        "Open Bots → Activity",
+        "Set STATUS = Running → verify only running bots shown",
+        "Set STATUS = Stopped → verify only stopped bots shown"
+      ],
+      "expected": "Each status filter shows only matching bots. Counter reflects filtered count.",
+      "priority": "High",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 14
+    },
+    {
+      "id": "BOT-010",
+      "module": "Bots",
+      "featureGroup": "Activity Tab",
+      "subFeature": "Filters & Sort",
+      "title": "Date range filter shows only bots within selected period",
+      "description": "Verify the date range picker filters bots by their start/run period.",
+      "preconditions": "Bots with different start dates exist",
+      "testData": {
+        "_0": "Select a date range that covers some but not all bots"
+      },
+      "rawTestData": "Select a date range that covers some but not all bots",
+      "steps": [
+        "Open Bots → Activity",
+        "Click 'Select date range' and pick a specific period",
+        "Check results"
+      ],
+      "expected": "Only bots whose period overlaps with the selected date range are displayed.",
+      "priority": "Medium",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 15
+    },
+    {
+      "id": "BOT-011",
+      "module": "Bots",
+      "featureGroup": "Activity Tab",
+      "subFeature": "Filters & Sort",
+      "title": "Sort by Newest / Oldest",
+      "description": "Verify the sort toggle correctly reorders bots by creation/start date.",
+      "preconditions": "Multiple bots with different start dates",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Open Bots → Activity",
+        "Click 'Newest' sort button",
+        "Toggle to 'Oldest'",
+        "Verify order changes"
+      ],
+      "expected": "Newest: most recently started bot appears first. Oldest: earliest started bot appears first.",
+      "priority": "Medium",
+      "severity": "Low",
+      "environment": "All",
+      "rowIndex": 16
+    },
+    {
+      "id": "BOT-012",
+      "module": "Bots",
+      "featureGroup": "Activity Tab",
+      "subFeature": "Filters & Sort",
+      "title": "Clear filters → full list restored",
+      "description": "Verify the Clear button resets all active filters and shows the full bot list.",
+      "preconditions": "At least one filter is active",
+      "testData": {
+        "_0": "Apply Type + Status filter first"
+      },
+      "rawTestData": "Apply Type + Status filter first",
+      "steps": [
+        "Apply Type = DCA and Status = Running",
+        "Verify filtered list",
+        "Click Clear",
+        "Verify result"
+      ],
+      "expected": "All filters are removed. Full unfiltered bot list is restored. Clear button disappears.",
+      "priority": "Medium",
+      "severity": "Low",
+      "environment": "All",
+      "rowIndex": 17
+    },
+    {
+      "id": "BOT-013",
+      "module": "Bots",
+      "featureGroup": "Bot Actions",
+      "subFeature": "Stop & Details",
+      "title": "Stop a running bot → status changes, removed from Live tab",
+      "description": "Verify stopping a bot updates its status and removes it from the Live view.",
+      "preconditions": "At least 1 bot in Running status",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Open Bots → Activity tab",
+        "Find a Running bot",
+        "Click 'Stop'",
+        "Confirm if prompted",
+        "Check Activity tab status and Live tab"
+      ],
+      "expected": "Bot status changes to Stopped. It is removed from the Live tab charts and stats. Portfolio summary updates.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 20
+    },
+    {
+      "id": "BOT-014",
+      "module": "Bots",
+      "featureGroup": "Bot Actions",
+      "subFeature": "Stop & Details",
+      "title": "Click Details → bot detail page opens with correct info",
+      "description": "Verify the Details button navigates to a bot detail page with accurate information.",
+      "preconditions": "At least 1 bot exists in the list",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Open Bots → Activity tab",
+        "Click 'Details' on any bot",
+        "Review the detail page content"
+      ],
+      "expected": "Bot detail page opens. Shows correct symbol, type, status, equity, P&L, and trade history matching the Activity list row.",
+      "priority": "High",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 21
+    },
+    {
+      "id": "AH-001",
+      "module": "Algo Hub",
+      "featureGroup": "Browse & Discover",
+      "subFeature": "Strategy List",
+      "title": "Strategy cards load with correct metrics",
+      "description": "Verify each strategy card displays all key metrics correctly in Grid view.",
+      "preconditions": "User is on Algo Hub page, strategies exist in the community list",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Open Algo Hub",
+        "Observe strategy cards in Grid view",
+        "Check each card for: PNL%, USD amount, mini chart, Period, Win Rate, Sharpe Ratio, Drawdown"
+      ],
+      "expected": "Every card shows PNL%, USD value, mini chart, Period, Win Rate, Sharpe Ratio, and Drawdown. No blank or '--' values where data exists.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 3
+    },
+    {
+      "id": "AH-002",
+      "module": "Algo Hub",
+      "featureGroup": "Browse & Discover",
+      "subFeature": "Strategy List",
+      "title": "Sort by Newest & pagination navigate correctly",
+      "description": "Verify sort order and page navigation return the correct set of strategies.",
+      "preconditions": "More than 16 strategies published in Algo Hub",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Open Algo Hub",
+        "Confirm sort is set to 'Newest'",
+        "Note top strategy",
+        "Click next page → verify new set of strategies",
+        "Click previous → verify original set returns"
+      ],
+      "expected": "Newest sort shows most recently published strategy first. Pagination correctly loads next/previous pages. Page count (e.g. 1/2) is accurate.",
+      "priority": "Medium",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 4
+    },
+    {
+      "id": "AH-003",
+      "module": "Algo Hub",
+      "featureGroup": "Browse & Discover",
+      "subFeature": "Strategy List",
+      "title": "Switch between Algo Hub and My Published tabs",
+      "description": "Verify each tab shows the correct scope of strategies.",
+      "preconditions": "User has at least 1 published strategy; community has other strategies",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Open Algo Hub tab → note strategies shown",
+        "Click 'My Published' tab → check list changes",
+        "Switch back to Algo Hub"
+      ],
+      "expected": "Algo Hub shows all community strategies. My Published shows only the current user's strategies. Switching tabs updates the list without page reload errors.",
+      "priority": "High",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 5
+    },
+    {
+      "id": "AH-004",
+      "module": "Algo Hub",
+      "featureGroup": "Search & Filter",
+      "subFeature": "Search",
+      "title": "Keyword search returns matching strategies",
+      "description": "Verify that typing a keyword and pressing Enter filters strategies by name.",
+      "preconditions": "Strategies with known names exist in Algo Hub",
+      "testData": {
+        "keyword": "'EMA' (known to match multiple strategies)"
+      },
+      "rawTestData": "Keyword: 'EMA' (known to match multiple strategies)",
+      "steps": [
+        "Open Algo Hub",
+        "Click Search box",
+        "Type 'EMA' and press Enter",
+        "Review results"
+      ],
+      "expected": "Only strategies with 'EMA' in their name are shown. Result count updates accordingly.",
+      "priority": "High",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 8
+    },
+    {
+      "id": "AH-005",
+      "module": "Algo Hub",
+      "featureGroup": "Search & Filter",
+      "subFeature": "Search",
+      "title": "Search with no match → empty state shown",
+      "description": "Verify a search that returns no results shows a clear empty state rather than breaking the UI.",
+      "preconditions": "User is on Algo Hub",
+      "testData": {
+        "keyword": "'xyznotexist999'"
+      },
+      "rawTestData": "Keyword: 'xyznotexist999'",
+      "steps": [
+        "Open Algo Hub",
+        "Type 'xyznotexist999' in search and press Enter"
+      ],
+      "expected": "Empty state message is displayed (e.g. 'No strategies found'). No errors, blank cards, or crashes.",
+      "priority": "Medium",
+      "severity": "Low",
+      "environment": "All",
+      "rowIndex": 9
+    },
+    {
+      "id": "AH-006",
+      "module": "Algo Hub",
+      "featureGroup": "Search & Filter",
+      "subFeature": "Filter",
+      "title": "Filter by single metric returns correct results",
+      "description": "Verify that applying one filter condition correctly narrows the strategy list.",
+      "preconditions": "Strategies with varied metrics exist",
+      "testData": {
+        "filter": "Drawdown (%) < 20"
+      },
+      "rawTestData": "Filter: Drawdown (%) < 20",
+      "steps": [
+        "Open Algo Hub",
+        "Click Filter",
+        "Set condition: Drawdown (%) < 20",
+        "Click Apply",
+        "Review results"
+      ],
+      "expected": "Only strategies with Drawdown below 20% are shown. Result count is less than or equal to total. Strategies exceeding the threshold are hidden.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 11
+    },
+    {
+      "id": "AH-007",
+      "module": "Algo Hub",
+      "featureGroup": "Search & Filter",
+      "subFeature": "Filter",
+      "title": "Multiple filter conditions combine correctly",
+      "description": "Verify that adding a second filter condition applies AND logic.",
+      "preconditions": "Strategies with varied metrics exist",
+      "testData": {
+        "filter 1": "Net Profit (%) > 10; Filter 2: Win Rate (%) > 50"
+      },
+      "rawTestData": "Filter 1: Net Profit (%) > 10; Filter 2: Win Rate (%) > 50",
+      "steps": [
+        "Open Algo Hub → click Filter",
+        "Set condition 1: Net Profit (%) > 10",
+        "Click Add Filter",
+        "Set condition 2: Win Rate (%) > 50",
+        "Click Apply"
+      ],
+      "expected": "Only strategies meeting BOTH conditions are returned. Result count is fewer than or equal to each individual filter result.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 12
+    },
+    {
+      "id": "AH-008",
+      "module": "Algo Hub",
+      "featureGroup": "Search & Filter",
+      "subFeature": "Filter",
+      "title": "Clear all filters restores full strategy list",
+      "description": "Verify the Clear All button removes all active filters and shows the unfiltered list.",
+      "preconditions": "At least one filter is active",
+      "testData": {
+        "_0": "Any active filter (e.g. Net Profit > 10)"
+      },
+      "rawTestData": "Any active filter (e.g. Net Profit > 10)",
+      "steps": [
+        "Apply any filter",
+        "Verify filtered list",
+        "Click 'Clear all'",
+        "Observe result"
+      ],
+      "expected": "All filters are removed. Full community strategy list is restored. Result count matches the unfiltered total.",
+      "priority": "Medium",
+      "severity": "Low",
+      "environment": "All",
+      "rowIndex": 13
+    },
+    {
+      "id": "AH-009",
+      "module": "Algo Hub",
+      "featureGroup": "Strategy Detail",
+      "subFeature": "Overview & Chart",
+      "title": "Show details opens full strategy detail page with overview metrics",
+      "description": "Verify clicking 'Show details' navigates to the detail page with all key metrics present.",
+      "preconditions": "At least 1 strategy exists in Algo Hub",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Open Algo Hub",
+        "Click 'Show details' on any strategy",
+        "Review the Overview panel"
+      ],
+      "expected": "Detail page opens. Overview panel displays: Total Orders, Avg Win, Avg Loss, Compounding Annual Return, Drawdown, Expectancy, Start Equity, End Equity, Net Profit, Sharpe Ratio.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 16
+    },
+    {
+      "id": "AH-010",
+      "module": "Algo Hub",
+      "featureGroup": "Strategy Detail",
+      "subFeature": "Overview & Chart",
+      "title": "Trading Chart renders with Buy/Sell signals and all Analytics tabs load",
+      "description": "Verify the Trading Chart and all 5 analytics tabs display data without errors.",
+      "preconditions": "Strategy detail page is open",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "On strategy detail page, open Trading Chart tab",
+        "Verify chart renders with Buy/Sell signal markers",
+        "Click each tab: Equity, Capacity, Exposure, Drawdown, Benchmark"
+      ],
+      "expected": "Trading Chart shows candlestick chart with Buy/Sell markers and indicators. All 5 analytics tabs load charts/data without errors or blank screens.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 17
+    },
+    {
+      "id": "AH-011",
+      "module": "Algo Hub",
+      "featureGroup": "Strategy Detail",
+      "subFeature": "Overview & Chart",
+      "title": "Execution panel shows Trades, Orders, Order Events with PnL data",
+      "description": "Verify the right-side execution panel lists trade-level data correctly.",
+      "preconditions": "Strategy has completed trades (backtest period with activity)",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Open strategy detail page",
+        "Review the execution panel on the right",
+        "Switch between Trades, Orders, Order Events tabs"
+      ],
+      "expected": "Each panel tab loads a table with relevant columns. Trades show Symbol, PnL, Entry/Exit. Orders show quantity, price, type. No empty tables where data should exist.",
+      "priority": "High",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 18
+    },
+    {
+      "id": "AH-012",
+      "module": "Algo Hub",
+      "featureGroup": "Clone",
+      "subFeature": "Clone Strategy",
+      "title": "Clone from strategy card (list view) opens copy in Strategy Builder",
+      "description": "Verify the clone icon on a strategy card creates a copy and opens it in Strategy Builder.",
+      "preconditions": "User is on Algo Hub list view",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Open Algo Hub",
+        "Click the Clone icon on any strategy card",
+        "Observe where the system navigates"
+      ],
+      "expected": "System navigates to Strategy Builder with a copy of the selected strategy loaded. Strategy name, indicators, and logic match the original.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 21
+    },
+    {
+      "id": "AH-013",
+      "module": "Algo Hub",
+      "featureGroup": "Clone",
+      "subFeature": "Clone Strategy",
+      "title": "Clone from strategy detail page produces the same result",
+      "description": "Verify that cloning from the detail page works identically to cloning from the list.",
+      "preconditions": "User is on a strategy detail page",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Open any strategy detail page",
+        "Click Clone button",
+        "Compare the copy to the original"
+      ],
+      "expected": "Strategy Builder opens with a copy that matches the original strategy config. Both entry points (card and detail) produce identical results.",
+      "priority": "High",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 22
+    },
+    {
+      "id": "AH-014",
+      "module": "Algo Hub",
+      "featureGroup": "Clone",
+      "subFeature": "Clone Strategy",
+      "title": "Cloned strategy can be run as Backtest, Paper Trade, or Live Trade",
+      "description": "Verify all 3 run modes are available after cloning a strategy.",
+      "preconditions": "A cloned strategy is open in Strategy Builder",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Clone any strategy",
+        "In Strategy Builder, check available run options",
+        "Attempt to initiate Backtest",
+        "Verify Paper Trade and Live Trade options are also accessible"
+      ],
+      "expected": "All 3 modes — Backtest, Paper Trade, Live Trade — are available and can be initiated from the cloned strategy without errors.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 23
+    },
+    {
+      "id": "AH-015",
+      "module": "Algo Hub",
+      "featureGroup": "My Published",
+      "subFeature": "Published Strategies",
+      "title": "My Published tab shows only current user's strategies",
+      "description": "Verify the My Published tab is scoped to the logged-in user's published strategies only.",
+      "preconditions": "User has published at least 1 strategy; other users have also published strategies",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Open Algo Hub",
+        "Click 'My Published' tab",
+        "Check all listed strategies"
+      ],
+      "expected": "Only strategies published by the current logged-in user appear. Other users' strategies are not shown.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 26
+    },
+    {
+      "id": "AH-016",
+      "module": "Algo Hub",
+      "featureGroup": "My Published",
+      "subFeature": "Published Strategies",
+      "title": "User's published strategy is visible in community Algo Hub list",
+      "description": "Verify that after publishing, a strategy appears in the public Algo Hub list for all users.",
+      "preconditions": "User has published a strategy from Strategy Builder",
+      "testData": {
+        "_0": "Published strategy name is known"
+      },
+      "rawTestData": "Published strategy name is known",
+      "steps": [
+        "Publish a strategy from Strategy Builder",
+        "Open Algo Hub community tab",
+        "Search for the strategy by name"
+      ],
+      "expected": "The published strategy appears in the Algo Hub list and is discoverable by other users via search.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 27
+    },
+    {
+      "id": "AL-001",
+      "module": "Alert",
+      "featureGroup": "Create Alert — AI Method",
+      "subFeature": "AI Generation",
+      "title": "Describe alert in natural language → AI proposes condition tree",
+      "description": "Verify AI correctly interprets a plain-language description and returns a valid If-condition tree.",
+      "preconditions": "User is in Alert module with AI mode active",
+      "testData": {
+        "prompt": "'Create an alert for BTCUSDT when RSI (14) is below 30 on the 1-hour chart'"
+      },
+      "rawTestData": "Prompt: 'Create an alert for BTCUSDT when RSI (14) is below 30 on the 1-hour chart'",
+      "steps": [
+        "Open Alerts → AI mode",
+        "Type the prompt and submit",
+        "Review AI response"
+      ],
+      "expected": "AI returns a proposal with a text summary and a visual If-condition tree using correct operand types. Parameters (symbol, indicator, value, timeframe) match the prompt.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 3
+    },
+    {
+      "id": "AL-002",
+      "module": "Alert",
+      "featureGroup": "Create Alert — AI Method",
+      "subFeature": "AI Generation",
+      "title": "AI proposal with incomplete info → AI asks for clarification",
+      "description": "Verify AI requests missing details before generating a tree rather than assuming defaults silently.",
+      "preconditions": "User is in AI mode",
+      "testData": {
+        "vague prompt": "'Alert me when BTC moves a lot'"
+      },
+      "rawTestData": "Vague prompt: 'Alert me when BTC moves a lot'",
+      "steps": [
+        "Enter a vague prompt missing key parameters",
+        "Observe AI response"
+      ],
+      "expected": "AI responds with follow-up questions asking for clarification on missing details (threshold, direction, timeframe) before generating the condition tree.",
+      "priority": "High",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 4
+    },
+    {
+      "id": "AL-003",
+      "module": "Alert",
+      "featureGroup": "Create Alert — AI Method",
+      "subFeature": "AI Generation",
+      "title": "Apply AI-generated alert → condition tree loads into editor",
+      "description": "Verify clicking 'Apply Alert' correctly populates the Alert Editor with the AI-generated condition blocks.",
+      "preconditions": "AI has returned a valid alert proposal",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Review AI proposal",
+        "Click 'Apply Alert'",
+        "Check Alert Editor content"
+      ],
+      "expected": "Alert Editor populates with the condition tree from the AI proposal. All blocks, operand values, and logic connectors are correctly loaded.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 5
+    },
+    {
+      "id": "AL-004",
+      "module": "Alert",
+      "featureGroup": "Create Alert — Manual Method",
+      "subFeature": "Alert Setup",
+      "title": "Create alert with all required fields filled → saved successfully",
+      "description": "Verify a fully configured manual alert saves without errors.",
+      "preconditions": "User is on Alerts page",
+      "testData": {
+        "name": "'BTC RSI Alert', Brokerage: BINANCE, Notify Via: Web + Email, Active: ON"
+      },
+      "rawTestData": "Name: 'BTC RSI Alert', Brokerage: BINANCE, Notify Via: Web + Email, Active: ON",
+      "steps": [
+        "Click '+ Create New Alert'",
+        "Fill in Name, Brokerage, Description",
+        "Set Expiration: No Expiration",
+        "Toggle Notify Via: Web + Email",
+        "Set Active ON",
+        "Add If Condition block",
+        "Click Create Alert"
+      ],
+      "expected": "Alert is saved and appears in the Alert List with status Active. All configured fields are persisted correctly.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 8
+    },
+    {
+      "id": "AL-005",
+      "module": "Alert",
+      "featureGroup": "Create Alert — Manual Method",
+      "subFeature": "Alert Setup",
+      "title": "Create alert with expiration date → auto-deactivates when expired",
+      "description": "Verify alert with a set expiration automatically becomes inactive after the expiration datetime.",
+      "preconditions": "Alert is created with a near-future expiration time",
+      "testData": {
+        "expiration": "set to 2 minutes from creation time"
+      },
+      "rawTestData": "Expiration: set to 2 minutes from creation time",
+      "steps": [
+        "Create alert with expiration set to 2 minutes ahead",
+        "Verify alert is Active",
+        "Wait for expiration time to pass",
+        "Check alert status"
+      ],
+      "expected": "After expiration, alert status changes to Inactive automatically. Alert no longer triggers notifications. Expiration time is shown in the alert details.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 9
+    },
+    {
+      "id": "AL-006",
+      "module": "Alert",
+      "featureGroup": "Create Alert — Manual Method",
+      "subFeature": "Alert Setup",
+      "title": "Create alert without required field (Name or Brokerage) → validation error",
+      "description": "Verify the system blocks saving an incomplete alert and shows a clear error.",
+      "preconditions": "User is creating a new alert",
+      "testData": {
+        "_0": "Leave Brokerage field blank"
+      },
+      "rawTestData": "Leave Brokerage field blank",
+      "steps": [
+        "Click '+ Create New Alert'",
+        "Fill in Name but skip Brokerage",
+        "Click Create Alert"
+      ],
+      "expected": "System shows a validation error on the empty required field. Alert is not saved. Error message clearly indicates which field is missing.",
+      "priority": "High",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 10
+    },
+    {
+      "id": "AL-007",
+      "module": "Alert",
+      "featureGroup": "If Condition Logic",
+      "subFeature": "Operand Types",
+      "title": "Configure Left Operand as Bar Window (TradeClose) — condition saves correctly",
+      "description": "Verify Bar Window operand with all parameters (Bar Type, Bar Property, Resolution, Interval, Symbol) saves correctly.",
+      "preconditions": "User is building a condition block in Alert Editor",
+      "testData": {
+        "bar type": "TradeBar, Bar Property: TradeClose, Resolution: 1H, Interval: 1, Symbol: BTCUSDT"
+      },
+      "rawTestData": "Bar Type: TradeBar, Bar Property: TradeClose, Resolution: 1H, Interval: 1, Symbol: BTCUSDT",
+      "steps": [
+        "Add If Condition block",
+        "Click Left Operand → select Bar Window",
+        "Set: Bar Type=TradeBar, Bar Property=TradeClose, Resolution=1H, Interval=1, Symbol=BTCUSDT",
+        "Set operator > and Right Operand=Constant(70000)",
+        "Click Apply"
+      ],
+      "expected": "Condition saves with all Bar Window parameters. Block displays the operand configuration correctly. No validation errors.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 13
+    },
+    {
+      "id": "AL-008",
+      "module": "Alert",
+      "featureGroup": "If Condition Logic",
+      "subFeature": "Operand Types",
+      "title": "Configure Left Operand as Indicator (e.g. RSI 14) — condition evaluates correctly",
+      "description": "Verify Indicator operand saves with correct period and resolution, and the alert fires based on indicator value.",
+      "preconditions": "User is building a condition block",
+      "testData": {
+        "indicator": "RSI, Period: 14, Resolution: 1H, Threshold: 30"
+      },
+      "rawTestData": "Indicator: RSI, Period: 14, Resolution: 1H, Threshold: 30",
+      "steps": [
+        "Add If Condition block",
+        "Click Left Operand → select Indicator → choose RSI",
+        "Set Period=14, Resolution=1H",
+        "Set operator < and Right Operand=Constant(30)",
+        "Click Apply"
+      ],
+      "expected": "Condition saves with RSI(14) on 1H correctly. Alert fires when RSI drops below 30. Parameters persist after save.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 14
+    },
+    {
+      "id": "AL-009",
+      "module": "Alert",
+      "featureGroup": "If Condition Logic",
+      "subFeature": "Operand Types",
+      "title": "Configure condition using CandlestickPattern operand",
+      "description": "Verify CandlestickPattern operand can be selected and pattern type is saved correctly.",
+      "preconditions": "User is building a condition block",
+      "testData": {
+        "pattern": "any available pattern (e.g. Hammer)"
+      },
+      "rawTestData": "Pattern: any available pattern (e.g. Hammer)",
+      "steps": [
+        "Add If Condition block",
+        "Click Left Operand → select CandlestickPattern",
+        "Choose a pattern type and configure symbol/resolution",
+        "Click Apply"
+      ],
+      "expected": "Pattern type and parameters save correctly. Condition block reflects the selected pattern. Alert fires only when that candlestick pattern appears.",
+      "priority": "Medium",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 15
+    },
+    {
+      "id": "AL-010",
+      "module": "Alert",
+      "featureGroup": "If Condition Logic",
+      "subFeature": "Operand Types",
+      "title": "Use Constant as operand — fixed numeric value accepted",
+      "description": "Verify Constant can be used as an operand and the numeric value is stored correctly.",
+      "preconditions": "User is building a condition block",
+      "testData": {
+        "constant value": "50000"
+      },
+      "rawTestData": "Constant value: 50000",
+      "steps": [
+        "Add If Condition block",
+        "Set one side as Constant and enter 50000",
+        "Click Apply"
+      ],
+      "expected": "Constant value is accepted and displayed in the condition block. Value persists after save.",
+      "priority": "Medium",
+      "severity": "Low",
+      "environment": "All",
+      "rowIndex": 16
+    },
+    {
+      "id": "AL-011",
+      "module": "Alert",
+      "featureGroup": "If Condition Logic",
+      "subFeature": "AND / OR Logic",
+      "title": "Switch condition logic connector from AND to OR",
+      "description": "Verify the logic connector between conditions can be toggled and saved.",
+      "preconditions": "If Condition block with at least 2 sub-conditions exists",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Add If Condition block with 2 conditions",
+        "Set connector to AND → save",
+        "Edit → switch to OR → save again"
+      ],
+      "expected": "Connector toggles between AND and OR. Selection is persisted after save. Visual indicator in editor reflects the change.",
+      "priority": "High",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 18
+    },
+    {
+      "id": "AL-012",
+      "module": "Alert",
+      "featureGroup": "If Condition Logic",
+      "subFeature": "AND / OR Logic",
+      "title": "Multiple AND conditions — alert fires only when all conditions are met simultaneously",
+      "description": "Verify AND logic requires all conditions to be true at the same time.",
+      "preconditions": "Alert with 2 AND conditions configured and active",
+      "testData": {
+        "condition 1": "RSI(14) < 30; Condition 2: Bar Window Close < 65000"
+      },
+      "rawTestData": "Condition 1: RSI(14) < 30; Condition 2: Bar Window Close < 65000",
+      "steps": [
+        "Create alert: RSI(14) < 30 AND Close < 65000",
+        "Activate alert",
+        "Monitor — alert should only fire when BOTH conditions are true"
+      ],
+      "expected": "Notification fires only on bars/moments where both RSI < 30 AND Close < 65000 are simultaneously true. No false alerts from a single condition.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 19
+    },
+    {
+      "id": "AL-013",
+      "module": "Alert",
+      "featureGroup": "If Condition Logic",
+      "subFeature": "AND / OR Logic",
+      "title": "Multiple OR conditions — alert fires when any one condition is met",
+      "description": "Verify OR logic triggers the alert when at least one condition is true.",
+      "preconditions": "Alert with 2 OR conditions configured and active",
+      "testData": {
+        "condition 1": "RSI(14) < 30; Condition 2: RSI(14) > 70"
+      },
+      "rawTestData": "Condition 1: RSI(14) < 30; Condition 2: RSI(14) > 70",
+      "steps": [
+        "Create alert: RSI(14) < 30 OR RSI(14) > 70",
+        "Activate alert",
+        "Monitor — alert should fire when either condition is true"
+      ],
+      "expected": "Notification fires when either RSI drops below 30 OR rises above 70. Fires more frequently than a single condition alone.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 20
+    },
+    {
+      "id": "AL-014",
+      "module": "Alert",
+      "featureGroup": "If Condition Logic",
+      "subFeature": "AND / OR Logic",
+      "title": "Incomplete condition block (missing operand or value) → save blocked",
+      "description": "Verify saving is prevented when a condition block is not fully configured.",
+      "preconditions": "User has added an If Condition block but left an operand empty",
+      "testData": {
+        "_0": "Right Operand value left blank"
+      },
+      "rawTestData": "Right Operand value left blank",
+      "steps": [
+        "Add If Condition block",
+        "Configure Left Operand but leave Right Operand empty",
+        "Click Create Alert"
+      ],
+      "expected": "System shows a validation error on the incomplete block. Alert is not saved until all operand fields are filled.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 21
+    },
+    {
+      "id": "AL-015",
+      "module": "Alert",
+      "featureGroup": "If Condition Logic",
+      "subFeature": "AND / OR Logic",
+      "title": "Edit existing condition block — changes are reflected in the alert",
+      "description": "Verify modifying a condition block in an existing alert updates it correctly.",
+      "preconditions": "Alert with an existing If Condition block exists",
+      "testData": {
+        "_0": "Change threshold from 30 to 25"
+      },
+      "rawTestData": "Change threshold from 30 to 25",
+      "steps": [
+        "Open an existing alert in the editor",
+        "Click on the condition block and change the Constant value",
+        "Save"
+      ],
+      "expected": "Updated value is saved and displayed in the condition block. Alert behaviour reflects the new threshold going forward.",
+      "priority": "Medium",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 22
+    },
+    {
+      "id": "AL-016",
+      "module": "Alert",
+      "featureGroup": "Alert Management",
+      "subFeature": "Manage Alerts",
+      "title": "Toggle alert ON/OFF → status updates immediately and persists",
+      "description": "Verify the active toggle correctly activates/deactivates an alert and the state is saved.",
+      "preconditions": "At least one alert exists in the list",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Find an Active alert in the list",
+        "Toggle it to Inactive",
+        "Refresh the page",
+        "Toggle back to Active"
+      ],
+      "expected": "Status changes immediately on toggle. State persists after page refresh. Inactive alerts do not fire notifications.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 25
+    },
+    {
+      "id": "AL-017",
+      "module": "Alert",
+      "featureGroup": "Alert Management",
+      "subFeature": "Manage Alerts",
+      "title": "Edit existing alert — logic and setup changes are saved correctly",
+      "description": "Verify changes to an existing alert's configuration are persisted.",
+      "preconditions": "An existing alert is open in the editor",
+      "testData": {
+        "_0": "Change alert name and add a second condition"
+      },
+      "rawTestData": "Change alert name and add a second condition",
+      "steps": [
+        "Open an existing alert",
+        "Change the Name",
+        "Add a second condition block",
+        "Save"
+      ],
+      "expected": "Updated name and new condition block are saved. Alert list reflects the new name. Updated logic takes effect for future triggers.",
+      "priority": "High",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 26
+    },
+    {
+      "id": "AL-018",
+      "module": "Alert",
+      "featureGroup": "Alert Management",
+      "subFeature": "Manage Alerts",
+      "title": "Delete an alert → permanently removed from list",
+      "description": "Verify deleted alerts are removed and do not reappear.",
+      "preconditions": "At least one alert exists",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Select an alert from the list",
+        "Click Delete",
+        "Confirm deletion",
+        "Check alert list"
+      ],
+      "expected": "Alert is permanently removed from the list. No ghost entry remains. Deleted alert no longer triggers notifications.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 27
+    },
+    {
+      "id": "AL-019",
+      "module": "Alert",
+      "featureGroup": "Alert Management",
+      "subFeature": "Manage Alerts",
+      "title": "Expired alert auto-deactivates → can be reactivated by editing expiration",
+      "description": "Verify expired alerts deactivate automatically and can be brought back by updating the expiration.",
+      "preconditions": "An alert with a past expiration date exists",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Locate an expired/inactive alert",
+        "Edit the expiration to a future date or set No Expiration",
+        "Save"
+      ],
+      "expected": "Alert becomes Active again after expiration is updated. Notifications resume. Expiration date reflects the new value.",
+      "priority": "High",
+      "severity": "Medium",
+      "environment": "All",
+      "rowIndex": 28
+    },
+    {
+      "id": "AL-020",
+      "module": "Alert",
+      "featureGroup": "Notifications & Triggers",
+      "subFeature": "Alert Firing",
+      "title": "Active alert condition met → Web notification appears on BeeTrade",
+      "description": "Verify a real-time web notification is delivered when an active alert's condition is satisfied.",
+      "preconditions": "Alert is Active with Notify Via = Web; condition is likely to trigger",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Create and activate alert with Web notification",
+        "Wait for condition to be met (or set a condition currently true)",
+        "Check BeeTrade notification area"
+      ],
+      "expected": "Web notification appears in the BeeTrade interface promptly when the condition is met. Notification includes alert name and trigger details.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 31
+    },
+    {
+      "id": "AL-021",
+      "module": "Alert",
+      "featureGroup": "Notifications & Triggers",
+      "subFeature": "Alert Firing",
+      "title": "Active alert with Email → notification sent to registered email address",
+      "description": "Verify email notification is delivered to the user's registered address when condition fires.",
+      "preconditions": "Alert is Active with Notify Via = Email",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Create and activate alert with Email notification",
+        "Wait for condition to trigger",
+        "Check registered email inbox"
+      ],
+      "expected": "Email notification is received with correct alert name and condition details. Email is sent to the account's registered address.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 32
+    },
+    {
+      "id": "AL-022",
+      "module": "Alert",
+      "featureGroup": "Notifications & Triggers",
+      "subFeature": "Alert Firing",
+      "title": "Inactive alert condition met → no notification sent",
+      "description": "Verify alerts that are toggled off do not fire even when conditions are met.",
+      "preconditions": "Alert is Inactive; condition is known to be currently true",
+      "testData": {},
+      "rawTestData": "N/A",
+      "steps": [
+        "Create alert with a condition currently true (e.g. RSI > 0)",
+        "Toggle the alert to Inactive",
+        "Wait and monitor notifications"
+      ],
+      "expected": "No web or email notification is sent despite the condition being true. Inactive status fully suppresses alert firing.",
+      "priority": "High",
+      "severity": "High",
+      "environment": "All",
+      "rowIndex": 33
+    }
+  ]
+}

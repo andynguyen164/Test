@@ -1,0 +1,20 @@
+node_modules/
+dist/
+
+# Run artifacts — keep folder, ignore contents except master log
+reports/*
+!reports/.gitkeep
+!reports/bug-log-master.json
+
+# Auth state from global-setup
+utils/.auth/
+
+# Playwright defaults
+test-results/
+playwright-report/
+
+# OS
+.DS_Store
+
+# Claude Code workspace
+.claude/

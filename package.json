@@ -1,0 +1,27 @@
+{
+  "name": "auto-testing-agent",
+  "version": "1.0.0",
+  "description": "BeeTrade automated QA agent driven by Test Case org.xlsx and Playwright.",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:trading": "playwright test tests/trading.spec.ts",
+    "test:strategy": "playwright test tests/strategy-builder.spec.ts",
+    "test:bots": "playwright test tests/bots.spec.ts",
+    "test:algo-hub": "playwright test tests/algo-hub.spec.ts",
+    "test:alert": "playwright test tests/alert.spec.ts",
+    "report": "playwright show-report reports/latest/playwright-html",
+    "sync-tests": "ts-node scripts/sync-tests.ts",
+    "compare-runs": "ts-node scripts/compare-runs.ts"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^20.19.40",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "xlsx": "^0.18.5"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
